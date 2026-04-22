@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Points and Circles – Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f9f6ef;
+    --ink: #1a1a2e;
+    --red: #c0392b;
+    --blue: #1a4a7a;
+    --gold: #d4a017;
+    --light-blue: #dce8f5;
+    --grid: #d5cfc4;
+    --inside: #27ae60;
+    --on: #c0392b;
+    --outside: #1a4a7a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Source Sans 3', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: stretch;
+    border: 2.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    box-shadow: 4px 4px 0 var(--ink);
+    animation: slideDown 0.5s ease both;
+  }
+  .header-label {
+    background: var(--blue);
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    padding: 0.9rem 1.4rem;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .header-title {
+    background: #fff;
+    flex: 1;
+    padding: 0.9rem 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    border-left: 2.5px solid var(--ink);
+  }
+
+  /* Two-column layout */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .main-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Cards */
+  .card {
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 6px;
+    padding: 1.25rem 1.4rem;
+    box-shadow: 3px 3px 0 var(--ink);
+    animation: fadeUp 0.5s ease both;
+  }
+  .card:nth-child(2) { animation-delay: 0.08s; }
+  .card:nth-child(3) { animation-delay: 0.16s; }
+  .card:nth-child(4) { animation-delay: 0.24s; }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--blue);
+    border-bottom: 1.5px solid var(--light-blue);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.9rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* Circle diagram */
+  .diagram-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0;
+  }
+
+  svg text { font-family: 'JetBrains Mono', monospace; }
+
+  /* Equation display */
+  .equation {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: center;
+    margin: 0.5rem 0 1rem;
+    letter-spacing: 0.04em;
+  }
+
+  .setup-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    color: #555;
+    margin-bottom: 0.25rem;
+  }
+  .setup-row span:last-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* Rules */
+  .rules {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 5px;
+    font-size: 0.93rem;
+    border: 1.5px solid transparent;
+  }
+  .rule .sym {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    width: 2rem;
+    text-align: center;
+  }
+  .rule .verdict {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-left: auto;
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .rule.outside { background: #edf2fb; border-color: var(--outside); }
+  .rule.outside .sym { color: var(--outside); }
+  .rule.outside .verdict { background: var(--outside); color: #fff; }
+  .rule.on      { background: #fdecea; border-color: var(--on); }
+  .rule.on .sym      { color: var(--on); }
+  .rule.on .verdict  { background: var(--on); color: #fff; }
+  .rule.inside  { background: #eafaf1; border-color: var(--inside); }
+  .rule.inside .sym  { color: var(--inside); }
+  .rule.inside .verdict { background: var(--inside); color: #fff; }
+
+  /* Worked examples table */
+  .examples-card {
+    grid-column: 1 / -1;
+  }
+  .examples-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 560px) {
+    .examples-grid { grid-template-columns: 1fr; }
+    .examples-card { grid-column: 1; }
+  }
+
+  .example {
+    border: 1.5px solid var(--grid);
+    border-radius: 5px;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s;
+  }
+  .example:hover { transform: translateY(-2px); }
+
+  .ex-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .ex-point {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.75rem;
+  }
+  .ex-working {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    color: var(--ink);
+    line-height: 1.7;
+    margin-bottom: 0.6rem;
+    text-align: left;
+  }
+  .ex-working .step { display: block; }
+  .ex-working .step.formula { color: #888; font-size: 0.82rem; }
+
+  .ex-result {
+    display: inline-block;
+    margin-top: 0.4rem;
+    padding: 0.3rem 0.9rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+  }
+  .ex-result.outside { background: var(--outside); color: #fff; }
+  .ex-result.on      { background: var(--on);      color: #fff; }
+  .ex-result.inside  { background: var(--inside);  color: #fff; }
+
+  .dot-A { fill: var(--blue); }
+  .dot-B { fill: var(--red); }
+  .dot-C { fill: var(--red); }
+
+  /* Animations */
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #aaa;
+    margin-top: 2.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="header-label">Notes…</div>
+    <div class="header-title">Points and Circles</div>
+  </header>
+
+  <div class="main-grid">
+
+    <!-- Diagram card -->
+    <div class="card">
+      <div class="card-title">The Circle</div>
+      <div class="setup-row"><span>Centre</span><span>(0, 0)</span></div>
+      <div class="setup-row"><span>Radius</span><span>r = 3</span></div>
+      <div class="equation">x² + y² = 9</div>
+      <div class="diagram-wrap">
+        <svg width="220" height="220" viewBox="-5.5 -5.5 11 11" xmlns="http://www.w3.org/2000/svg">
+          <!-- Grid lines -->
+          <line x1="-5" x2="5" y1="0" y2="0" stroke="#b0a89a" stroke-width="0.07"/>
+          <line x1="0" x2="0" y1="-5" y2="5" stroke="#b0a89a" stroke-width="0.07"/>
+          <!-- Axes ticks -->
+          <line x1="-3" x2="-3" y1="-0.15" y2="0.15" stroke="#888" stroke-width="0.06"/>
+          <line x1="3"  x2="3"  y1="-0.15" y2="0.15" stroke="#888" stroke-width="0.06"/>
+          <line x1="-0.15" x2="0.15" y1="-3" y2="3"  stroke="none"/>
+
+          <!-- Circle -->
+          <circle cx="0" cy="0" r="3" fill="none" stroke="#1a1a2e" stroke-width="0.12"/>
+
+          <!-- Centre mark -->
+          <circle cx="0" cy="0" r="0.12" fill="#1a1a2e"/>
+
+          <!-- Radius label -->
+          <line x1="0" x2="3" y1="0" y2="0" stroke="#c0392b" stroke-width="0.07" stroke-dasharray="0.2 0.15"/>
+          <text x="1.4" y="-0.25" font-size="0.45" fill="#c0392b" text-anchor="middle">r = 3</text>
+
+          <!-- Point A: (-3, 4) — outside -->
+          <circle cx="-3" cy="-4" r="0.2" class="dot-A"/>
+          <text x="-3" y="-4.45" font-size="0.45" fill="#1a4a7a" text-anchor="middle" font-weight="bold">A(−3, 4)</text>
+
+          <!-- Point B: (1, 1) — inside -->
+          <circle cx="1" cy="-1" r="0.2" class="dot-B"/>
+          <text x="1.6" y="-1.1" font-size="0.45" fill="#c0392b" text-anchor="start" font-weight="bold">B(1,1)</text>
+
+          <!-- Point C: (-3, 0) — on -->
+          <circle cx="-3" cy="0" r="0.2" class="dot-C"/>
+          <text x="-3" y="0.6" font-size="0.45" fill="#c0392b" text-anchor="middle" font-weight="bold">C(−3,0)</text>
+
+          <!-- Axis labels -->
+          <text x="4.8" y="0.4" font-size="0.4" fill="#888">x</text>
+          <text x="0.2" y="-4.8" font-size="0.4" fill="#888">y</text>
+          <text x="3" y="0.6" font-size="0.35" fill="#888" text-anchor="middle">3</text>
+          <text x="-3" y="0.6" font-size="0.35" fill="#888" text-anchor="middle">−3</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Rules card -->
+    <div class="card">
+      <div class="card-title">The Key Rule</div>
+      <p style="font-size:0.9rem; color:#555; margin-bottom:1rem; line-height:1.5;">
+        To determine where a point lies relative to a circle, calculate its
+        <strong>distance from the centre</strong> and compare it to the radius.
+      </p>
+      <div class="rules">
+        <div class="rule outside">
+          <span class="sym">&gt;</span>
+          <span>Distance from centre <strong>greater than</strong> radius</span>
+          <span class="verdict">OUTSIDE</span>
+        </div>
+        <div class="rule on">
+          <span class="sym">=</span>
+          <span>Distance from centre <strong>equal to</strong> radius</span>
+          <span class="verdict">ON</span>
+        </div>
+        <div class="rule inside">
+          <span class="sym">&lt;</span>
+          <span>Distance from centre <strong>less than</strong> radius</span>
+          <span class="verdict">INSIDE</span>
+        </div>
+      </div>
+      <div style="margin-top:1rem; padding:0.7rem 0.9rem; background:#f5f0e8; border-radius:5px; font-size:0.85rem; color:#555; line-height:1.5;">
+        <strong style="color:var(--ink);">Formula:</strong><br>
+        <span style="font-family:'JetBrains Mono',monospace;">d = √(x² + y²)</span><br>
+        (for a circle centred at the origin)
+      </div>
+    </div>
+
+    <!-- Worked examples -->
+    <div class="card examples-card">
+      <div class="card-title">Worked Examples &nbsp;— circle: x² + y² = 9 &nbsp;(r = 3)</div>
+      <div class="examples-grid">
+
+        <!-- A -->
+        <div class="example">
+          <div class="ex-label" style="color:var(--blue);">Point A</div>
+          <div class="ex-point">(−3, 4)</div>
+          <div class="ex-working">
+            <span class="step formula">d = √(x² + y²)</span>
+            <span class="step">d = √((−3)² + 4²)</span>
+            <span class="step">d = √(9 + 16)</span>
+            <span class="step">d = √25</span>
+            <span class="step">d = <strong>5</strong></span>
+          </div>
+          <div>5 &gt; 3</div>
+          <span class="ex-result outside">OUTSIDE</span>
+        </div>
+
+        <!-- B -->
+        <div class="example">
+          <div class="ex-label" style="color:var(--inside);">Point B</div>
+          <div class="ex-point">(1, 1)</div>
+          <div class="ex-working">
+            <span class="step formula">d = √(x² + y²)</span>
+            <span class="step">d = √(1² + 1²)</span>
+            <span class="step">d = √(1 + 1)</span>
+            <span class="step">d = √2</span>
+            <span class="step">d ≈ <strong>1.41</strong></span>
+          </div>
+          <div>√2 &lt; 3</div>
+          <span class="ex-result inside">INSIDE</span>
+        </div>
+
+        <!-- C -->
+        <div class="example">
+          <div class="ex-label" style="color:var(--on);">Point C</div>
+          <div class="ex-point">(−3, 0)</div>
+          <div class="ex-working">
+            <span class="step formula">d = √(x² + y²)</span>
+            <span class="step">d = √((−3)² + 0²)</span>
+            <span class="step">d = √(9 + 0)</span>
+            <span class="step">d = √9</span>
+            <span class="step">d = <strong>3</strong></span>
+          </div>
+          <div>3 = 3</div>
+          <span class="ex-result on">ON</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <footer>Coordinate Geometry · Points &amp; Circles · LC Maths</footer>
+</div>
+</body>
+</html>
