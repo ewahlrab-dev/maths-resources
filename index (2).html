@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maths Resources</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --text: #f0f0f5;
+      --muted: #7a7d8e;
+      --lc-ol: #4f8ef7;
+      --lc-fl: #a78bfa;
+      --jc-ol: #34d399;
+      --jc-hl: #f59e0b;
+      --lca:   #f87171;
+      --accent: #4f8ef7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* HEADER */
+    header {
+      padding: 40px 20px 28px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(160deg, #151821 0%, #0f1117 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: #fff;
+    }
+    header h1 span {
+      color: var(--accent);
+    }
+    header p {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* FILTER TABS */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .filter-btn {
+      flex-shrink: 0;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      color: #fff;
+      border-color: transparent;
+    }
+    .filter-btn[data-filter="all"].active    { background: #2a2d3a; }
+    .filter-btn[data-filter="lc-ol"].active  { background: var(--lc-ol); }
+    .filter-btn[data-filter="lc-fl"].active  { background: var(--lc-fl); }
+    .filter-btn[data-filter="jc-ol"].active  { background: var(--jc-ol); color: #0f1117; }
+    .filter-btn[data-filter="jc-hl"].active  { background: var(--jc-hl); color: #0f1117; }
+    .filter-btn[data-filter="lca"].active    { background: var(--lca); }
+
+    /* SECTIONS */
+    .section {
+      margin: 24px 20px 0;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .section-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .section-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* CARDS */
+    .card-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+    }
+    .card:hover, .card:active {
+      border-color: #3a3d4a;
+      transform: translateY(-1px);
+    }
+
+    .card-icon {
+      width: 38px; height: 38px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .card-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-topic {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .card-arrow {
+      color: var(--muted);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* Colour theming per level */
+    .lc-ol .card::before  { background: var(--lc-ol); }
+    .lc-ol .card-icon     { background: rgba(79,142,247,0.12); color: var(--lc-ol); }
+    .lc-fl .card::before  { background: var(--lc-fl); }
+    .lc-fl .card-icon     { background: rgba(167,139,250,0.12); color: var(--lc-fl); }
+    .jc-ol .card::before  { background: var(--jc-ol); }
+    .jc-ol .card-icon     { background: rgba(52,211,153,0.12); color: var(--jc-ol); }
+    .jc-hl .card::before  { background: var(--jc-hl); }
+    .jc-hl .card-icon     { background: rgba(245,158,11,0.12); color: var(--jc-hl); }
+    .lca   .card::before  { background: var(--lca); }
+    .lca   .card-icon     { background: rgba(248,113,113,0.12); color: var(--lca); }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .empty-icon { font-size: 2rem; margin-bottom: 10px; }
+
+    /* Hidden */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Maths<br/><span>Resources</span></h1>
+  <p>Tap a resource to open it in full screen.</p>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="lc-ol">LC Ordinary</button>
+  <button class="filter-btn" data-filter="lc-fl">LC Foundation</button>
+  <button class="filter-btn" data-filter="jc-ol">JC Ordinary</button>
+  <button class="filter-btn" data-filter="jc-hl">JC Higher</button>
+  <button class="filter-btn" data-filter="lca">LCA</button>
+</div>
+
+<div id="resource-list">
+
+  <!-- ── LC ORDINARY LEVEL ── -->
+  <div class="section lc-ol" data-level="lc-ol">
+    <div class="section-header">
+      <div class="section-dot" style="background:var(--lc-ol)"></div>
+      <span class="section-title">LC Ordinary Level</span>
+      <span class="section-count" id="count-lc-ol"></span>
+    </div>
+    <div class="card-grid" id="grid-lc-ol">
+
+      <a class="card" href="lc-ol/lc-ol-stats-skew.html">
+        <div class="card-icon">📊</div>
+        <div class="card-body">
+          <div class="card-title">Positive &amp; Negative Skew</div>
+          <div class="card-topic">Statistics</div>
+        </div>
+        <span class="card-arrow">›</span>
+      </a>
+
+      <!-- ADD MORE LC OL CARDS HERE -->
+      <!-- Copy the block above, update href, title and topic -->
+
+    </div>
+  </div>
+
+  <!-- ── LC FOUNDATION LEVEL ── -->
+  <div class="section lc-fl" data-level="lc-fl">
+    <div class="section-header">
+      <div class="section-dot" style="background:var(--lc-fl)"></div>
+      <span class="section-title">LC Foundation Level</span>
+      <span class="section-count" id="count-lc-fl"></span>
+    </div>
+    <div class="card-grid" id="grid-lc-fl">
+
+      <!-- ADD LC FL CARDS HERE -->
+      <div class="empty"><div class="empty-icon">📂</div>No resources yet — coming soon.</div>
+
+    </div>
+  </div>
+
+  <!-- ── JC ORDINARY LEVEL ── -->
+  <div class="section jc-ol" data-level="jc-ol">
+    <div class="section-header">
+      <div class="section-dot" style="background:var(--jc-ol)"></div>
+      <span class="section-title">JC Ordinary Level</span>
+      <span class="section-count" id="count-jc-ol"></span>
+    </div>
+    <div class="card-grid" id="grid-jc-ol">
+
+      <!-- ADD JC OL CARDS HERE -->
+      <div class="empty"><div class="empty-icon">📂</div>No resources yet — coming soon.</div>
+
+    </div>
+  </div>
+
+  <!-- ── JC HIGHER LEVEL ── -->
+  <div class="section jc-hl" data-level="jc-hl">
+    <div class="section-header">
+      <div class="section-dot" style="background:var(--jc-hl)"></div>
+      <span class="section-title">JC Higher Level</span>
+      <span class="section-count" id="count-jc-hl"></span>
+    </div>
+    <div class="card-grid" id="grid-jc-hl">
+
+      <!-- ADD JC HL CARDS HERE -->
+      <div class="empty"><div class="empty-icon">📂</div>No resources yet — coming soon.</div>
+
+    </div>
+  </div>
+
+  <!-- ── LCA ── -->
+  <div class="section lca" data-level="lca">
+    <div class="section-header">
+      <div class="section-dot" style="background:var(--lca)"></div>
+      <span class="section-title">Leaving Cert Applied</span>
+      <span class="section-count" id="count-lca"></span>
+    </div>
+    <div class="card-grid" id="grid-lca">
+
+      <!-- ADD LCA CARDS HERE -->
+      <div class="empty"><div class="empty-icon">📂</div>No resources yet — coming soon.</div>
+
+    </div>
+  </div>
+
+</div><!-- /resource-list -->
+
+<script>
+  // Count cards per section
+  const levels = ['lc-ol','lc-fl','jc-ol','jc-hl','lca'];
+  levels.forEach(level => {
+    const grid = document.getElementById('grid-' + level);
+    const cards = grid ? grid.querySelectorAll('a.card').length : 0;
+    const counter = document.getElementById('count-' + level);
+    if (counter) counter.textContent = cards === 0 ? '' : cards + (cards === 1 ? ' resource' : ' resources');
+  });
+
+  // Filter tabs
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const sections = document.querySelectorAll('.section[data-level]');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      sections.forEach(sec => {
+        if (filter === 'all' || sec.dataset.level === filter) {
+          sec.classList.remove('hidden');
+        } else {
+          sec.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
