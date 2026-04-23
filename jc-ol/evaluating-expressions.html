@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluating Expressions</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f0ede6;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0.75rem;
+    min-height: 100vh;
+  }
+
+  .poster {
+    width: 100%;
+    max-width: 820px;
+    background: #fffdf8;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.13);
+    border: 3px solid #2b2b2b;
+    overflow: hidden;
+  }
+
+  .poster-header {
+    background: #2b2b2b;
+    color: #fffdf8;
+    padding: 1.4rem 1.5rem;
+  }
+  .subject-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #f5c842;
+    margin-bottom: 0.3rem;
+  }
+  .poster-title {
+    font-family: 'Lora', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+  .poster-subtitle {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.3rem;
+  }
+
+  .key-rule {
+    background: #f5c842;
+    color: #2b2b2b;
+    padding: 0.7rem 1.5rem;
+    font-weight: 800;
+    font-size: 0.85rem;
+    border-bottom: 3px solid #2b2b2b;
+  }
+
+  .examples {
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Each example card */
+  .card {
+    border: 2.5px solid #2b2b2b;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  /* Top bar: badge + given info side by side */
+  .card-top {
+    display: flex;
+    border-bottom: 2px solid #2b2b2b;
+  }
+
+  .card-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.8rem 0.9rem;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-right: 2px solid #2b2b2b;
+    min-width: 70px;
+  }
+  .card-badge .emoji { font-size: 1.3rem; }
+
+  .card.easy   .card-badge { background: #d4f5d4; color: #1a6b1a; }
+  .card.medium .card-badge { background: #fff2c2; color: #8a6000; }
+  .card.hard   .card-badge { background: #ffd6d6; color: #9b1a1a; }
+
+  .card-given {
+    background: #f7f4ee;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+    flex: 1;
+  }
+  .mini-label {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #aaa;
+  }
+  .given-vals {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2b2b2b;
+  }
+  .evaluate-expr {
+    font-family: 'Lora', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #2b2b2b;
+    margin-top: 0.25rem;
+  }
+
+  /* Steps section */
+  .card-steps {
+    padding: 1rem 1.1rem;
+    background: #fffdf8;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .card.easy   .step-num { background: #2a8a2a; }
+  .card.medium .step-num { background: #c47f00; }
+  .card.hard   .step-num { background: #c0222a; }
+
+  .step-inner { display: flex; flex-direction: column; }
+  .step-math {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    color: #2b2b2b;
+    line-height: 1.2;
+  }
+  .step-note {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #bbb;
+  }
+
+  .step-arrow {
+    font-size: 1rem;
+    color: #ccc;
+    flex-shrink: 0;
+  }
+
+  .answer-chip {
+    margin-left: auto;
+    border-radius: 7px;
+    padding: 0.3rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ans-label {
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .ans-val {
+    font-family: 'Lora', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .card.easy   .answer-chip { background: #d4f5d4; color: #1a6b1a; }
+  .card.medium .answer-chip { background: #fff2c2; color: #8a6000; }
+  .card.hard   .answer-chip { background: #ffd6d6; color: #9b1a1a; }
+
+  /* Tips */
+  .tips {
+    margin: 0 1.2rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .tip {
+    background: #f4f0e8;
+    border: 1.5px solid #ddd9d0;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  .tip strong {
+    display: block;
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 0.2rem;
+  }
+
+  @media (min-width: 600px) {
+    .tips { flex-direction: row; }
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <div class="poster-header">
+    <div class="subject-tag">Algebra</div>
+    <div class="poster-title">Evaluating Expressions</div>
+    <div class="poster-subtitle">Substituting values to find the answer</div>
+  </div>
+
+  <div class="key-rule">
+    💡 Replace each letter with its value, then calculate.
+  </div>
+
+  <div class="examples">
+
+    <!-- EASY -->
+    <div class="card easy">
+      <div class="card-top">
+        <div class="card-badge">
+          <span class="emoji">🟢</span>
+          Easy
+        </div>
+        <div class="card-given">
+          <div class="mini-label">Given</div>
+          <div class="given-vals">x = 3</div>
+          <div class="mini-label" style="margin-top:0.3rem">Evaluate</div>
+          <div class="evaluate-expr">3x</div>
+        </div>
+      </div>
+      <div class="card-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-inner">
+            <div class="step-math">3(3)</div>
+            <div class="step-note">substitute</div>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-inner">
+            <div class="step-math">= 9</div>
+            <div class="step-note">multiply</div>
+          </div>
+        </div>
+        <div class="answer-chip">
+          <span class="ans-label">Answer</span>
+          <span class="ans-val">9</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDIUM -->
+    <div class="card medium">
+      <div class="card-top">
+        <div class="card-badge">
+          <span class="emoji">🟡</span>
+          Medium
+        </div>
+        <div class="card-given">
+          <div class="mini-label">Given</div>
+          <div class="given-vals">x = 1 &nbsp;&nbsp; y = 2</div>
+          <div class="mini-label" style="margin-top:0.3rem">Evaluate</div>
+          <div class="evaluate-expr">3x − 4y</div>
+        </div>
+      </div>
+      <div class="card-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-inner">
+            <div class="step-math">3(1) − 4(2)</div>
+            <div class="step-note">substitute</div>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-inner">
+            <div class="step-math">3 − 8</div>
+            <div class="step-note">multiply each</div>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-inner">
+            <div class="step-math">= −5</div>
+            <div class="step-note">subtract</div>
+          </div>
+        </div>
+        <div class="answer-chip">
+          <span class="ans-label">Answer</span>
+          <span class="ans-val">−5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HARD -->
+    <div class="card hard">
+      <div class="card-top">
+        <div class="card-badge">
+          <span class="emoji">🔴</span>
+          Hard
+        </div>
+        <div class="card-given">
+          <div class="mini-label">Given</div>
+          <div class="given-vals">a = 2 &nbsp; b = 1 &nbsp; c = −4</div>
+          <div class="mini-label" style="margin-top:0.3rem">Evaluate</div>
+          <div class="evaluate-expr">a + b − c</div>
+        </div>
+      </div>
+      <div class="card-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-inner">
+            <div class="step-math">(2) + (1) − (−4)</div>
+            <div class="step-note">substitute</div>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-inner">
+            <div class="step-math">2 + 1 + 4</div>
+            <div class="step-note">−(−4) = +4</div>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-inner">
+            <div class="step-math">= 7</div>
+            <div class="step-note">add</div>
+          </div>
+        </div>
+        <div class="answer-chip">
+          <span class="ans-label">Answer</span>
+          <span class="ans-val">7</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tips">
+    <div class="tip">
+      <strong>⚠️ Negative numbers</strong>
+      Always wrap a negative value in brackets when substituting. e.g. 4n where n = −2 → 4<b>(−2)</b> = −8
+    </div>
+    <div class="tip">
+      <strong>🔁 Subtracting a negative</strong>
+      Minus a negative becomes plus a positive. e.g. −(−4) = +4
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
