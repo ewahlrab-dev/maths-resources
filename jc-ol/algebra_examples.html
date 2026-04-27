@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algebra Examples</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Source+Code+Pro:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f0f4ff;
+    min-height: 100vh;
+    padding: 32px 16px 60px;
+    color: #1a1a2e;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 36px;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .card-header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .card-header .icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .card-header .label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .card-header .title {
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+
+  /* Section A — blue */
+  .card-a .card-header { background: #e8f0fe; }
+  .card-a .card-header .icon { background: #4a7cf7; }
+  .card-a .card-header .title { color: #1a3a8f; }
+  .card-a .step-num { background: #4a7cf7; }
+  .card-a .question-box { border-left: 4px solid #4a7cf7; background: #f0f5ff; }
+  .card-a .answer { color: #1a3a8f; border-top: 2px dashed #c0d0f8; }
+
+  /* Section B — green */
+  .card-b .card-header { background: #e6f9f0; }
+  .card-b .card-header .icon { background: #2dba7c; }
+  .card-b .card-header .title { color: #145c3a; }
+  .card-b .step-num { background: #2dba7c; }
+  .card-b .question-box { border-left: 4px solid #2dba7c; background: #f0fdf7; }
+  .card-b .answer { color: #145c3a; border-top: 2px dashed #a8e8cc; }
+
+  /* Section C — orange */
+  .card-c .card-header { background: #fff3e6; }
+  .card-c .card-header .icon { background: #f07820; }
+  .card-c .card-header .title { color: #7a3500; }
+  .card-c .step-num { background: #f07820; }
+  .card-c .question-box { border-left: 4px solid #f07820; background: #fff8f2; }
+  .card-c .answer { color: #7a3500; border-top: 2px dashed #f8c99a; }
+
+  .card-body {
+    padding: 20px 24px 24px;
+  }
+
+  .question-box {
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .question-box .q-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 4px;
+  }
+
+  .expr {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-content {
+    flex: 1;
+  }
+
+  .step-content .step-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    opacity: 0.55;
+    margin-bottom: 3px;
+  }
+
+  .step-content .step-text {
+    font-size: 0.97rem;
+    font-weight: 600;
+    color: #1a1a2e;
+  }
+
+  .step-content .step-math {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.97rem;
+    font-weight: 500;
+    color: #333;
+    margin-top: 2px;
+  }
+
+  .answer {
+    margin-top: 4px;
+    padding: 12px 16px;
+    border-radius: 0 0 10px 10px;
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .answer .tick { font-size: 1.1rem; }
+</style>
+</head>
+<body>
+
+<h1>Algebra — Worked Examples</h1>
+<p class="subtitle">Junior Cycle Mathematics · Ordinary Level</p>
+
+<div class="cards">
+
+  <!-- Section A -->
+  <div class="card card-a">
+    <div class="card-header">
+      <div class="icon">🔢</div>
+      <div>
+        <div class="label">Section A</div>
+        <div class="title">Evaluating Expressions</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="question-box">
+        <div class="q-label">Example Question</div>
+        Find the value of <span class="expr">3p + 7q</span> when <strong>p = 2</strong> and <strong>q = 4</strong>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-label">Substitute the values in</div>
+            <div class="step-math">3(2) + 7(4)</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-label">Multiply each term</div>
+            <div class="step-math">= 6 + 28</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-label">Add them together</div>
+            <div class="step-math">= 34</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer">
+        <span class="tick">✅</span> Answer: &nbsp;<strong>34</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div class="card card-b">
+    <div class="card-header">
+      <div class="icon">✖️</div>
+      <div>
+        <div class="label">Section B</div>
+        <div class="title">Multiply Out and Simplify</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="question-box">
+        <div class="q-label">Example Question</div>
+        Multiply out and simplify:
+        <div class="expr">2(3a + 4) + 5a</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-label">Multiply out the bracket</div>
+            <div class="step-math">2 × 3a + 2 × 4 + 5a</div>
+            <div class="step-math">= 6a + 8 + 5a</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-label">Collect like terms (group the a's)</div>
+            <div class="step-math">= 6a + 5a + 8</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-label">Simplify</div>
+            <div class="step-math">= 11a + 8</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer">
+        <span class="tick">✅</span> Answer: &nbsp;<strong>11a + 8</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section C -->
+  <div class="card card-c">
+    <div class="card-header">
+      <div class="icon">⚖️</div>
+      <div>
+        <div class="label">Section C</div>
+        <div class="title">Solving Equations</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="question-box">
+        <div class="q-label">Example Question</div>
+        Solve for y:
+        <div class="expr">8y + 4 = 2y − 8</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-label">Move all y's to one side</div>
+            <div class="step-math">8y − 2y = −8 − 4</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-label">Simplify both sides</div>
+            <div class="step-math">6y = −12</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-label">Divide both sides by 6</div>
+            <div class="step-math">y = −12 ÷ 6</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer">
+        <span class="tick">✅</span> Answer: &nbsp;<strong>y = −2</strong>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
