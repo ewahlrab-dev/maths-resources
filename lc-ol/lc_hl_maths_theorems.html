@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LC Higher Level Mathematics — Theorems &amp; Proofs</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --navy: #1A3A6B;
+    --mid-blue: #2E5BAB;
+    --light-blue: #D6E4F7;
+    --pale-blue: #EBF3FD;
+    --gold: #C9A84C;
+    --light-gold: #FFF8E7;
+    --cream: #FAFAF7;
+    --text: #1A1A2E;
+    --text-muted: #5A5A72;
+    --proof-bg: #F0F7FF;
+    --note-bg: #F8F9FA;
+    --border: #D0DCF0;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    background: linear-gradient(135deg, var(--navy) 0%, #0D2447 60%, #1a3a6b 100%);
+    color: white;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 40px,
+      rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 80px
+    );
+  }
+  .header-label {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    opacity: 0.9;
+  }
+  .site-header h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+  .site-header .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1.5rem;
+  }
+  .gold-rule {
+    width: 80px; height: 3px;
+    background: var(--gold);
+    margin: 0 auto 1.5rem;
+    border-radius: 2px;
+  }
+  .header-meta {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== NAVIGATION ===== */
+  .toc-bar {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(26,58,107,0.08);
+  }
+  .toc-bar nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .toc-bar a {
+    display: block;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.82rem;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--navy);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .toc-bar a:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+    background: var(--pale-blue);
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ===== SECTION HEADINGS ===== */
+  .section-chapter {
+    margin-top: 3.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid var(--gold);
+  }
+  .section-chapter h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .chapter-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    background: var(--navy);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 50%;
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .theorem-block {
+    margin: 2rem 0;
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(26,58,107,0.07);
+  }
+
+  .theorem-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 2rem 0 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .theorem-title:first-child { border-top: none; margin-top: 0; }
+
+  .star-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: 'Source Serif 4', sans-serif;
+    padding: 0.1em 0.45em;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+    margin-left: 0.3rem;
+  }
+
+  /* ===== THEOREM STATEMENT BOX ===== */
+  .box-theorem {
+    background: var(--navy);
+    color: white;
+    padding: 1.1rem 1.4rem;
+    border-radius: 3px;
+    margin: 0.6rem 0;
+  }
+  .box-theorem .box-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.45rem;
+    font-weight: 700;
+  }
+  .box-theorem p, .box-theorem .math-line {
+    font-size: 0.97rem;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.92);
+  }
+
+  /* ===== PROOF BOX ===== */
+  .box-proof {
+    background: var(--light-gold);
+    border-left: 4px solid var(--gold);
+    padding: 1.1rem 1.4rem;
+    border-radius: 0 3px 3px 0;
+    margin: 0.6rem 0;
+  }
+  .box-proof .box-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+    font-weight: 700;
+  }
+  .box-proof p, .box-proof .proof-line {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: #3a2d00;
+    margin-bottom: 0.2rem;
+  }
+  .box-proof .proof-step {
+    display: flex;
+    gap: 0.7rem;
+    margin-bottom: 0.35rem;
+    align-items: flex-start;
+  }
+  .box-proof .proof-step .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--gold);
+    font-weight: 600;
+    min-width: 1.5rem;
+    padding-top: 0.2rem;
+  }
+  .box-proof .proof-blank { height: 0.5rem; }
+  .qed {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--gold);
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  /* ===== NOTES / DIAGRAM BOX ===== */
+  .box-notes {
+    background: var(--note-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--mid-blue);
+    padding: 1rem 1.4rem;
+    border-radius: 0 3px 3px 0;
+    margin: 0.6rem 0;
+  }
+  .box-notes .box-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid-blue);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  .box-notes p, .box-notes li {
+    font-size: 0.93rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+  .box-notes ul { padding-left: 1.2rem; margin-top: 0.3rem; }
+  .box-notes li { margin-bottom: 0.2rem; }
+
+  /* ===== MATH LINES ===== */
+  .math {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    background: rgba(26,58,107,0.06);
+    padding: 0.15em 0.4em;
+    border-radius: 2px;
+  }
+  .math-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 0.6rem 1rem;
+    border-radius: 3px;
+    margin: 0.4rem 0;
+    white-space: pre-wrap;
+    line-height: 1.7;
+    color: #1a1a2e;
+  }
+
+  /* ===== DIAGRAM SVGs ===== */
+  .diagram-container {
+    text-align: center;
+    margin: 0.8rem 0;
+    padding: 1rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+  }
+  .diagram-container svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .diagram-caption {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 0.4rem;
+  }
+
+  /* ===== SUMMARY TABLE ===== */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+  .summary-table th {
+    background: var(--navy);
+    color: white;
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+  }
+  .summary-table td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .summary-table tr:nth-child(even) td { background: var(--pale-blue); }
+  .summary-table .proof-yes {
+    text-align: center;
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .summary-table .thm-name { font-weight: 600; color: var(--navy); }
+  .summary-table .thm-result { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+
+  /* ===== INTRO BOX ===== */
+  .intro-box {
+    background: var(--pale-blue);
+    border: 1px solid var(--light-blue);
+    border-radius: 4px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .intro-box h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--navy);
+    margin-bottom: 0.6rem;
+    font-size: 1rem;
+  }
+  .intro-box p { font-size: 0.93rem; color: var(--text-muted); }
+  .intro-box ul { padding-left: 1.2rem; margin-top: 0.4rem; }
+  .intro-box li { font-size: 0.93rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: white;
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 600px) {
+    .site-header h1 { font-size: 1.8rem; }
+    .main-wrapper { padding: 1.5rem 1rem 3rem; }
+    .toc-bar a { padding: 0.7rem 0.7rem; font-size: 0.75rem; }
+    .summary-table { font-size: 0.78rem; }
+  }
+
+  @media print {
+    .toc-bar { display: none; }
+    .theorem-block { break-inside: avoid; }
+    body { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-label">Leaving Certificate · Higher Level</div>
+  <h1>Mathematics Theorems &amp; Proofs</h1>
+  <div class="subtitle">Complete Reference Booklet</div>
+  <div class="gold-rule"></div>
+  <div class="header-meta">All prescribed theorems · Worked proofs · Diagrams · Exam notes</div>
+</header>
+
+<!-- STICKY NAV -->
+<div class="toc-bar">
+  <nav>
+    <a href="#intro">Introduction</a>
+    <a href="#geometry">1. Geometry</a>
+    <a href="#trig">2. Trigonometry</a>
+    <a href="#algebra">3. Algebra</a>
+    <a href="#calculus">4. Calculus</a>
+    <a href="#number">5. Number Theory</a>
+    <a href="#sequences">6. Sequences</a>
+    <a href="#stats">7. Statistics</a>
+    <a href="#summary">Quick Reference</a>
+  </nav>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrapper">
+
+<!-- INTRO -->
+<section id="intro">
+  <div class="intro-box" style="margin-top:1.5rem;">
+    <h3>How to use this booklet</h3>
+    <p>This booklet contains all theorems and proofs prescribed for the Leaving Certificate Higher Level Mathematics examination. Conventions used:</p>
+    <ul>
+      <li><strong>Blue box</strong> — formal theorem statement</li>
+      <li><strong>Gold-bordered box</strong> — step-by-step proof</li>
+      <li><strong>Grey box</strong> — diagram notes and additional explanation</li>
+      <li><span class="star-badge">★ PROOF</span> — indicates proofs that can be examined</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SECTION 1: GEOMETRY -->
+<!-- ======================================================= -->
+<section id="geometry">
+  <div class="section-chapter">
+    <h2><span class="chapter-number">1</span>Geometry Theorems</h2>
+  </div>
+
+  <!-- THEOREM 1 -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 1 — Vertically Opposite Angles <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>Vertically opposite angles are equal in measure.</p>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 280 200" width="260" xmlns="http://www.w3.org/2000/svg">
+        <line x1="40" y1="40" x2="240" y2="160" stroke="#1A3A6B" stroke-width="2"/>
+        <line x1="240" y1="40" x2="40" y2="160" stroke="#1A3A6B" stroke-width="2"/>
+        <!-- angle arcs -->
+        <path d="M 140,100 m 20,0 a 20,20 0 0 0 -14,-14" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+        <path d="M 140,100 m -20,0 a 20,20 0 0 0 14,14" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+        <path d="M 140,100 m 0,-22 a 22,22 0 0 1 16,14" fill="none" stroke="#2E5BAB" stroke-width="1.5"/>
+        <path d="M 140,100 m 0,22 a 22,22 0 0 1 -16,-14" fill="none" stroke="#2E5BAB" stroke-width="1.5"/>
+        <text x="165" y="95" font-size="13" fill="#C9A84C" font-style="italic" font-family="serif">α</text>
+        <text x="108" y="115" font-size="13" fill="#C9A84C" font-style="italic" font-family="serif">α</text>
+        <text x="148" y="75" font-size="13" fill="#2E5BAB" font-style="italic" font-family="serif">β</text>
+        <text x="120" y="135" font-size="13" fill="#2E5BAB" font-style="italic" font-family="serif">β</text>
+        <circle cx="140" cy="100" r="3" fill="#1A3A6B"/>
+        <text x="143" y="97" font-size="11" fill="#666" font-family="serif">O</text>
+      </svg>
+      <div class="diagram-caption">Two intersecting lines at O. Vertically opposite angles α = α and β = β.</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <p>Let two lines intersect at O, forming angles α, β, α′, β′.</p>
+      <div class="math-block">α + β = 180°   (angles on a straight line)
+β + α′ = 180°   (angles on a straight line)
+
+∴  α = 180° − β = α′
+
+Similarly:  β = β′</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <!-- THEOREM 2 -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 2 — Isosceles Triangle <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>In an isosceles triangle, the angles opposite the equal sides are equal in measure. Conversely, if two angles are equal, the sides opposite them are equal.</p>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 280 200" width="260" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="140,20 40,180 240,180" fill="none" stroke="#1A3A6B" stroke-width="2"/>
+        <!-- tick marks on equal sides -->
+        <line x1="85" y1="105" x2="95" y2="95" stroke="#C9A84C" stroke-width="2"/>
+        <line x1="90" y1="110" x2="100" y2="100" stroke="#C9A84C" stroke-width="2"/>
+        <line x1="185" y1="95" x2="195" y2="105" stroke="#C9A84C" stroke-width="2"/>
+        <line x1="180" y1="100" x2="190" y2="110" stroke="#C9A84C" stroke-width="2"/>
+        <!-- altitude/axis of symmetry -->
+        <line x1="140" y1="20" x2="140" y2="180" stroke="#888" stroke-width="1" stroke-dasharray="5,4"/>
+        <!-- angle arcs at base -->
+        <path d="M 40,180 m 25,0 a 25,25 0 0 0 -17,-20" fill="none" stroke="#2E5BAB" stroke-width="1.5"/>
+        <path d="M 240,180 m -25,0 a 25,25 0 0 1 17,-20" fill="none" stroke="#2E5BAB" stroke-width="1.5"/>
+        <text x="135" y="16" font-size="12" fill="#1A3A6B" font-family="serif">A</text>
+        <text x="24" y="186" font-size="12" fill="#1A3A6B" font-family="serif">B</text>
+        <text x="244" y="186" font-size="12" fill="#1A3A6B" font-family="serif">C</text>
+        <text x="62" y="170" font-size="12" fill="#2E5BAB" font-style="italic" font-family="serif">β</text>
+        <text x="213" y="170" font-size="12" fill="#2E5BAB" font-style="italic" font-family="serif">β</text>
+        <text x="134" y="185" font-size="11" fill="#888" font-family="serif">D</text>
+      </svg>
+      <div class="diagram-caption">Isosceles triangle ABC with |AB| = |AC| (tick marks). Base angles at B and C are equal.</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <p>Let triangle ABC have |AB| = |AC|. Construct the angle bisector from A to BC, meeting BC at D.</p>
+      <p>In triangles ABD and ACD:</p>
+      <div class="math-block">|AB| = |AC|        (given)
+|AD| = |AD|        (common side)
+∠BAD = ∠CAD      (AD is angle bisector)</div>
+      <p>By SAS congruence: △ABD ≅ △ACD</p>
+      <p>Therefore: ∠ABD = ∠ACD, i.e. the base angles are equal.</p>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <!-- THEOREM 3 -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 3 — Angle Sum in a Triangle <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>The angles in any triangle sum to 180°.</p>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 320 200" width="300" xmlns="http://www.w3.org/2000/svg">
+        <!-- parallel line through A -->
+        <line x1="20" y1="50" x2="300" y2="50" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <!-- triangle -->
+        <polygon points="160,50 60,170 260,170" fill="none" stroke="#1A3A6B" stroke-width="2"/>
+        <!-- alternate angle arcs at A -->
+        <path d="M 160,50 m -30,0 a 30,30 0 0 0 22,22" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+        <path d="M 160,50 m 30,0 a 30,30 0 0 1 -22,22" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+        <!-- angle at A -->
+        <path d="M 160,50 m -12,22 a 22,22 0 0 0 24,0" fill="rgba(46,91,171,0.12)" stroke="#2E5BAB" stroke-width="1.5"/>
+        <text x="120" y="48" font-size="11" fill="#C9A84C" font-family="serif" font-style="italic">β</text>
+        <text x="182" y="48" font-size="11" fill="#C9A84C" font-family="serif" font-style="italic">γ</text>
+        <text x="153" y="80" font-size="12" fill="#2E5BAB" font-family="serif" font-style="italic">α</text>
+        <text x="155" y="45" font-size="12" fill="#1A3A6B" font-family="serif">A</text>
+        <text x="46" y="180" font-size="12" fill="#1A3A6B" font-family="serif">B</text>
+        <text x="262" y="180" font-size="12" fill="#1A3A6B" font-family="serif">C</text>
+        <!-- arrows for parallel line -->
+        <text x="22" y="46" font-size="14" fill="#C9A84C">→</text>
+        <text x="280" y="46" font-size="14" fill="#C9A84C">→</text>
+        <text x="58" y="168" font-size="14" fill="#C9A84C">→</text>
+        <text x="240" y="168" font-size="14" fill="#C9A84C">→</text>
+        <text x="60" y="164" font-size="11" fill="#2E5BAB" font-style="italic" font-family="serif">β</text>
+        <text x="246" y="164" font-size="11" fill="#2E5BAB" font-style="italic" font-family="serif">γ</text>
+      </svg>
+      <div class="diagram-caption">Line XAY drawn through A parallel to BC. Alternate angles are marked.</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <p>Draw line XAY through A parallel to BC.</p>
+      <div class="math-block">∠XAB = ∠ABC = β    (alternate angles, XY ∥ BC)
+∠YAC = ∠ACB = γ    (alternate angles, XY ∥ BC)
+
+β + α + γ = 180°    (straight line at A)</div>
+      <p>∴ The angles of any triangle sum to 180°.</p>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <!-- THEOREM 4 -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 4 — Exterior Angle of a Triangle <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>Each exterior angle of a triangle equals the sum of the two interior opposite angles.</p>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <p>Let triangle ABC have an exterior angle ε at C (extend BC to D).</p>
+      <div class="math-block">By Theorem 3:    α + β + γ = 180°
+Straight line:   γ + ε = 180°
+∴  ε = 180° − γ = α + β</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Diagram</div>
+      <p>Draw triangle ABC. Extend side BC beyond C to point D. The exterior angle ε = ∠ACD. Mark the two non-adjacent interior angles α (at A) and β (at B).</p>
+    </div>
+  </div>
+
+  <!-- THEOREM 5 -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 5 — Parallelogram Properties <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>In a parallelogram: (a) opposite sides are equal, (b) opposite angles are equal, (c) the diagonals bisect each other.</p>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 320 180" width="300" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="60,140 120,40 260,40 200,140" fill="rgba(214,228,247,0.4)" stroke="#1A3A6B" stroke-width="2"/>
+        <!-- diagonals -->
+        <line x1="60" y1="140" x2="260" y2="40" stroke="#888" stroke-width="1" stroke-dasharray="5,4"/>
+        <line x1="120" y1="40" x2="200" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="5,4"/>
+        <!-- E at intersection -->
+        <circle cx="160" cy="90" r="3" fill="#C9A84C"/>
+        <!-- tick marks on opposite sides -->
+        <line x1="86" y1="93" x2="96" y2="87" stroke="#C9A84C" stroke-width="2"/>
+        <line x1="226" y1="87" x2="236" y2="93" stroke="#C9A84C" stroke-width="2"/>
+        <line x1="183" y1="40" x2="193" y2="40" stroke="#2E5BAB" stroke-width="2"/>
+        <line x1="123" y1="140" x2="133" y2="140" stroke="#2E5BAB" stroke-width="2"/>
+        <!-- labels -->
+        <text x="50" y="148" font-size="12" fill="#1A3A6B" font-family="serif">A</text>
+        <text x="117" y="34" font-size="12" fill="#1A3A6B" font-family="serif">B</text>
+        <text x="261" y="34" font-size="12" fill="#1A3A6B" font-family="serif">C</text>
+        <text x="200" y="150" font-size="12" fill="#1A3A6B" font-family="serif">D</text>
+        <text x="163" y="86" font-size="11" fill="#C9A84C" font-family="serif">E</text>
+        <!-- parallel arrows -->
+        <text x="183" y="38" font-size="11" fill="#2E5BAB">→</text>
+        <text x="126" y="138" font-size="11" fill="#2E5BAB">→</text>
+      </svg>
+      <div class="diagram-caption">Parallelogram ABCD with diagonals intersecting at E. Equal sides marked with tick marks.</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof (a) &amp; (b) — Opposite sides and angles <span class="star-badge">★</span></div>
+      <p>Draw diagonal AC. In triangles ABC and CDA:</p>
+      <div class="math-block">∠BAC = ∠DCA   (alternate angles, AB ∥ CD)
+∠BCA = ∠DAC   (alternate angles, AD ∥ BC)
+|AC|  = |AC|   (common)</div>
+      <p>By ASA: △ABC ≅ △CDA, giving |AB|=|CD|, |AD|=|BC|, ∠ABC=∠CDA.</p>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof (c) — Diagonals bisect each other <span class="star-badge">★</span></div>
+      <p>Let diagonals meet at E. In triangles ABE and CDE:</p>
+      <div class="math-block">|AB| = |CD|        (proved above)
+∠ABE = ∠CDE      (alternate angles)
+∠BAE = ∠DCE      (alternate angles)</div>
+      <p>By ASA: △ABE ≅ △CDE, giving |AE|=|CE| and |BE|=|DE|.</p>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <!-- THEOREM 6: THALES -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 6 — Thales / Basic Proportionality Theorem</div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>If a line is parallel to one side of a triangle, it divides the other two sides in the same ratio. Conversely, if a line divides two sides of a triangle in equal ratios, it is parallel to the third side.</p>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Notes (Proof not required on LC HL)</div>
+      <p>If DE ∥ BC in triangle ABC (D on AB, E on AC):</p>
+      <div class="math-block">|AD|/|DB| = |AE|/|EC|
+|AD|/|AB| = |AE|/|AC|</div>
+      <p>This theorem is fundamental to similar triangles and ratio problems.</p>
+    </div>
+  </div>
+
+  <!-- THEOREM 7: SIMILAR TRIANGLES -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 7 — Similar Triangles</div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>If two triangles are equiangular (have the same three angles), they are similar and their corresponding sides are in proportion.</p>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Notes (Proof not required on LC HL)</div>
+      <ul>
+        <li>Similarity criteria: AA, SAS (sides in ratio, included angle equal), SSS (all sides in ratio).</li>
+        <li>If △ABC ∼ △DEF: |AB|/|DE| = |BC|/|EF| = |AC|/|DF|</li>
+        <li>Area ratio: (Area ABC)/(Area DEF) = (|AB|/|DE|)²</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- THEOREM 8: PYTHAGORAS -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 8 — Pythagoras' Theorem <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>In a right-angled triangle, the square on the hypotenuse equals the sum of the squares on the other two sides. If the right angle is at C: <strong>|AB|² = |AC|² + |BC|²</strong></p>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 320 220" width="300" xmlns="http://www.w3.org/2000/svg">
+        <!-- main triangle -->
+        <polygon points="60,180 60,40 240,180" fill="rgba(214,228,247,0.3)" stroke="#1A3A6B" stroke-width="2"/>
+        <!-- right angle at C=60,180 -->
+        <rect x="60" y="163" width="17" height="17" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+        <!-- altitude from C to AB -->
+        <line x1="60" y1="180" x2="130" y2="104" stroke="#2E5BAB" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <circle cx="130" cy="104" r="3" fill="#2E5BAB"/>
+        <!-- right angle at D -->
+        <rect x="124" y="100" width="12" height="12" fill="none" stroke="#2E5BAB" stroke-width="1"/>
+        <!-- labels -->
+        <text x="47" y="196" font-size="13" fill="#1A3A6B" font-family="serif">C</text>
+        <text x="47" y="36" font-size="13" fill="#1A3A6B" font-family="serif">A</text>
+        <text x="243" y="194" font-size="13" fill="#1A3A6B" font-family="serif">B</text>
+        <text x="130" y="94" font-size="13" fill="#2E5BAB" font-family="serif">D</text>
+        <text x="44" y="112" font-size="13" fill="#C9A84C" font-style="italic" font-family="serif">b</text>
+        <text x="150" y="196" font-size="13" fill="#C9A84C" font-style="italic" font-family="serif">a</text>
+        <text x="148" y="100" font-size="13" fill="#1A3A6B" font-style="italic" font-family="serif">c</text>
+      </svg>
+      <div class="diagram-caption">Right angle at C. Altitude CD dropped to hypotenuse AB. Three similar triangles: △ABC, △ACD, △CBD.</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof (using similar triangles) <span class="star-badge">★</span></div>
+      <p>Drop perpendicular from C to AB, foot at D. Then △ABC ∼ △ACD ∼ △CBD.</p>
+      <div class="math-block">From △ABC ∼ △ACD:    |AC|² = |AB|·|AD|   ...(i)
+From △ABC ∼ △CBD:    |BC|² = |AB|·|BD|   ...(ii)
+
+Adding: |AC|² + |BC|² = |AB|(|AD|+|BD|) = |AB|²</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Notes</div>
+      <p><strong>Converse:</strong> if |AB|² = |AC|² + |BC|², then the angle at C is 90°.</p>
+    </div>
+  </div>
+
+  <!-- THEOREM 9: SEMICIRCLE -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 9 — Angle in a Semicircle <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>The angle subtended at the circle by a diameter is a right angle (90°).</p>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 280 200" width="260" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="140" cy="130" r="90" fill="none" stroke="#1A3A6B" stroke-width="1.5"/>
+        <line x1="50" y1="130" x2="230" y2="130" stroke="#1A3A6B" stroke-width="2"/>
+        <!-- point C on upper arc -->
+        <line x1="50" y1="130" x2="175" y2="50" stroke="#2E5BAB" stroke-width="1.5"/>
+        <line x1="230" y1="130" x2="175" y2="50" stroke="#2E5BAB" stroke-width="1.5"/>
+        <!-- radii to C -->
+        <line x1="140" y1="130" x2="175" y2="50" stroke="#C9A84C" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- right angle at C -->
+        <rect x="170" y="52" width="10" height="10" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+        <!-- tick marks: equal radii -->
+        <text x="37" y="136" font-size="13" fill="#1A3A6B" font-family="serif">A</text>
+        <text x="233" y="136" font-size="13" fill="#1A3A6B" font-family="serif">B</text>
+        <text x="173" y="44" font-size="13" fill="#1A3A6B" font-family="serif">C</text>
+        <text x="136" y="125" font-size="12" fill="#C9A84C" font-family="serif">O</text>
+        <text x="90" y="96" font-size="12" fill="#2E5BAB" font-style="italic" font-family="serif">α</text>
+        <text x="198" y="96" font-size="12" fill="#2E5BAB" font-style="italic" font-family="serif">β</text>
+      </svg>
+      <div class="diagram-caption">AB is a diameter. C is any point on the circle. ∠ACB = 90°. O is the centre; OA = OB = OC (radii).</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <p>Let |OA|=|OB|=|OC| (radii). Triangles OAC and OBC are isosceles.</p>
+      <div class="math-block">Let ∠OAC = ∠OCA = α   (isosceles △OAC)
+Let ∠OBC = ∠OCB = β   (isosceles △OBC)
+
+Angle sum in △ABC:
+α + (α + β) + β = 180°
+2α + 2β = 180°
+∠ACB = α + β = 90°</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <!-- THEOREM 10: TANGENT PERP RADIUS -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 10 — Tangent Perpendicular to Radius <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>A tangent to a circle is perpendicular to the radius at the point of tangency.</p>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof by Contradiction <span class="star-badge">★</span></div>
+      <p>Let T be the point of tangency on circle with centre O, and tangent line L.</p>
+      <p>Suppose OT is <em>not</em> perpendicular to L. Then there exists a point P on L with |OP| &lt; |OT|.</p>
+      <p>But P is outside the circle (L is a tangent, meets circle only at T), so |OP| &gt; radius = |OT|.</p>
+      <p>This contradicts |OP| &lt; |OT|. ∴ OT must be perpendicular to L.</p>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <!-- THEOREM 11: EQUAL TANGENTS -->
+  <div class="theorem-block">
+    <div class="theorem-title">Theorem 11 — Equal Tangents from External Point <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>Tangent segments drawn from an external point to a circle are equal in length.</p>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <p>Let PA and PB be tangents from P, touching at A and B. Draw OA, OB, OP.</p>
+      <p>In triangles OAP and OBP:</p>
+      <div class="math-block">|OA| = |OB|         (radii)
+∠OAP = ∠OBP = 90° (tangent ⊥ radius, Thm 10)
+|OP| = |OP|         (common hypotenuse)</div>
+      <p>By RHS congruence: △OAP ≅ △OBP, so |PA| = |PB|.</p>
+      <div class="qed">□</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SECTION 2: TRIGONOMETRY -->
+<!-- ======================================================= -->
+<section id="trig">
+  <div class="section-chapter">
+    <h2><span class="chapter-number">2</span>Trigonometry Theorems</h2>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">The Sine Rule <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>In any triangle ABC with sides a = |BC|, b = |CA|, c = |AB|:</p>
+      <div class="math-block">a/sin A = b/sin B = c/sin C</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <p>Draw altitude h from C to AB:</p>
+      <div class="math-block">In △ACH:  sin A = h/b  →  h = b sin A
+In △BCH:  sin B = h/a  →  h = a sin B
+
+Therefore:  b sin A = a sin B
+            a/sin A = b/sin B     ...(i)
+
+Similarly (altitude from A): b/sin B = c/sin C  ...(ii)
+
+Combining:  a/sin A = b/sin B = c/sin C</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">When to use the Sine Rule</div>
+      <ul>
+        <li>AAS or ASA cases — two angles and one side known</li>
+        <li>SSA — the ambiguous case (may have 0, 1 or 2 solutions)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">The Cosine Rule <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <div class="math-block">a² = b² + c² − 2bc cos A
+cos A = (b² + c² − a²) / (2bc)</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof (coordinate geometry) <span class="star-badge">★</span></div>
+      <p>Place A at origin, B = (c, 0), C = (b cos A, b sin A).</p>
+      <div class="math-block">a² = |BC|² = (b cos A − c)² + (b sin A)²
+   = b²cos²A − 2bc cos A + c² + b²sin²A
+   = b²(cos²A + sin²A) + c² − 2bc cos A
+   = b² + c² − 2bc cos A</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">When to use the Cosine Rule</div>
+      <ul>
+        <li>SAS — two sides and included angle</li>
+        <li>SSS — all three sides known</li>
+        <li>Special case: A = 90° gives Pythagoras (cos 90° = 0)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Area of a Triangle</div>
+    <div class="box-theorem">
+      <div class="box-label">Formula</div>
+      <div class="math-block">Area = ½ bc sin A</div>
+      <p>where b and c are two sides and A is the included angle.</p>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof</div>
+      <div class="math-block">Height h from C to AB:  h = b sin A
+Area = ½ × base × height = ½ × c × b sin A = ½bc sin A</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Compound Angle Formulae <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <div class="math-block">sin(A+B) = sinA cosB + cosA sinB
+sin(A−B) = sinA cosB − cosA sinB
+cos(A+B) = cosA cosB − sinA sinB
+cos(A−B) = cosA cosB + sinA sinB
+tan(A+B) = (tanA + tanB) / (1 − tanA tanB)</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof of cos(A+B) <span class="star-badge">★</span></div>
+      <p>Place unit circle. Let P = (cos A, sin A), Q = (cos B, −sin B).</p>
+      <div class="math-block">|PQ|² = (cosA − cosB)² + (sinA + sinB)²
+      = 2 − 2cosA cosB + 2sinA sinB     ...(i)
+
+By cosine rule on △OPQ (|OP|=|OQ|=1, angle = A+B):
+|PQ|² = 2 − 2cos(A+B)                  ...(ii)
+
+Equating: cos(A+B) = cosA cosB − sinA sinB</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Deriving sin(A+B) from cos(A+B)</div>
+      <div class="math-block">sin(A+B) = cos(90°−(A+B)) = cos((90°−A)−B)
+         = cos(90°−A)cosB + sin(90°−A)sinB
+         = sinA cosB + cosA sinB</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Double Angle Formulae (set B = A)</div>
+      <div class="math-block">sin 2A = 2 sin A cos A
+cos 2A = cos²A − sin²A = 2cos²A − 1 = 1 − 2sin²A
+tan 2A = 2tanA / (1 − tan²A)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SECTION 3: ALGEBRA -->
+<!-- ======================================================= -->
+<section id="algebra">
+  <div class="section-chapter">
+    <h2><span class="chapter-number">3</span>Algebra &amp; Complex Numbers</h2>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Factor Theorem <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>If f(x) is a polynomial, then (x − a) is a factor of f(x) if and only if f(a) = 0.</p>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <p>By the Polynomial Division Algorithm:</p>
+      <div class="math-block">f(x) = (x−a)·q(x) + r    (r is a constant)
+
+Substitute x = a:
+f(a) = (a−a)·q(a) + r = r
+
+(⇒) If f(a) = 0, then r = 0, so (x−a) is a factor.
+(⇐) If (x−a) is a factor, then r = 0, so f(a) = 0.</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Proof by Mathematical Induction <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">The Principle</div>
+      <p>To prove P(n) for all n ≥ 1: prove P(1) (base case), then prove P(k) ⟹ P(k+1) (inductive step).</p>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Example: Sum of first n natural numbers <span class="star-badge">★</span></div>
+      <p><strong>Claim:</strong> 1 + 2 + 3 + ··· + n = n(n+1)/2</p>
+      <div class="math-block">Base case (n=1): LHS = 1, RHS = 1(2)/2 = 1 ✓
+
+Inductive step: Assume 1+2+···+k = k(k+1)/2
+
+1+2+···+k+(k+1) = k(k+1)/2 + (k+1)
+                 = (k+1)[k/2 + 1]
+                 = (k+1)(k+2)/2
+                 = (k+1)((k+1)+1)/2 ✓</div>
+      <div class="qed">True for all n ∈ ℕ by induction. □</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Example: Sum of squares <span class="star-badge">★</span></div>
+      <p><strong>Claim:</strong> 1² + 2² + ··· + n² = n(n+1)(2n+1)/6</p>
+      <div class="math-block">Base case (n=1): LHS = 1, RHS = 1(2)(3)/6 = 1 ✓
+
+Inductive step: Assume true for k. Then:
+1² + ··· + k² + (k+1)²
+= k(k+1)(2k+1)/6 + (k+1)²
+= (k+1)[k(2k+1)/6 + (k+1)]
+= (k+1)(2k²+7k+6)/6
+= (k+1)(k+2)(2k+3)/6
+= (k+1)((k+1)+1)(2(k+1)+1)/6 ✓</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Example: Divisibility <span class="star-badge">★</span></div>
+      <p><strong>Claim:</strong> 3ⁿ − 1 is divisible by 2 for all n ≥ 1.</p>
+      <div class="math-block">Base case: 3¹ − 1 = 2 = 2(1) ✓
+
+Assume 3ᵏ − 1 = 2m. Then:
+3^(k+1) − 1 = 3·3ᵏ − 1 = 3(2m+1) − 1 = 6m+2 = 2(3m+1) ✓</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">De Moivre's Theorem <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <div class="math-block">(cos θ + i sin θ)ⁿ = cos nθ + i sin nθ   for all n ∈ ℤ</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof by Induction <span class="star-badge">★</span></div>
+      <div class="math-block">Base case (n=1): (cosθ + i sinθ)¹ = cos θ + i sin θ ✓
+
+Inductive step: Assume (cosθ + i sinθ)ᵏ = cos kθ + i sin kθ
+
+(cosθ + i sinθ)^(k+1)
+= (cos kθ + i sin kθ)(cos θ + i sin θ)
+= cos kθ cosθ − sin kθ sinθ + i(sin kθ cosθ + cos kθ sinθ)
+= cos(kθ+θ) + i sin(kθ+θ)   [compound angle formulae]
+= cos(k+1)θ + i sin(k+1)θ  ✓</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Applications</div>
+      <ul>
+        <li>Powers of complex numbers in polar form</li>
+        <li>Finding nth roots of complex numbers</li>
+        <li>Expressing cos nθ, sin nθ in terms of cos θ, sin θ</li>
+        <li>Roots of unity: solutions of zⁿ = 1 are e^(2πki/n), k = 0,1,...,n−1</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SECTION 4: CALCULUS -->
+<!-- ======================================================= -->
+<section id="calculus">
+  <div class="section-chapter">
+    <h2><span class="chapter-number">4</span>Calculus Theorems</h2>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Definition of the Derivative (First Principles) <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Definition</div>
+      <div class="math-block">f′(x) = lim[h→0]  [f(x+h) − f(x)] / h</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof: d/dx(xⁿ) = nxⁿ⁻¹ <span class="star-badge">★</span></div>
+      <div class="math-block">f′(x) = lim[h→0] [(x+h)ⁿ − xⁿ] / h
+
+Expand (x+h)ⁿ by Binomial Theorem:
+= lim[h→0] [nxⁿ⁻¹h + C(n,2)xⁿ⁻²h² + ... + hⁿ] / h
+= lim[h→0] [nxⁿ⁻¹ + C(n,2)xⁿ⁻²h + ... + hⁿ⁻¹]
+= nxⁿ⁻¹</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof: d/dx(sin x) = cos x <span class="star-badge">★</span></div>
+      <div class="math-block">f′(x) = lim[h→0] [sin(x+h) − sin x] / h
+
+Using sin(x+h) = sinx cosh + cosx sinh:
+= lim[h→0] [sinx(cosh−1) + cosx sinh] / h
+= sinx · lim(cosh−1)/h  +  cosx · lim sinh/h
+= sinx · 0              +  cosx · 1
+= cos x</div>
+      <div class="box-notes" style="margin:0.5rem 0 0 0; border:none; background:transparent; padding-left:0;">
+        <p style="font-size:0.85rem; color: #888;">Standard limits used: lim[h→0] sinh/h = 1 and lim[h→0] (cosh−1)/h = 0</p>
+      </div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof: d/dx(eˣ) = eˣ</div>
+      <div class="math-block">f′(x) = lim[h→0] [e^(x+h) − eˣ] / h
+       = eˣ · lim[h→0] (eʰ−1)/h
+       = eˣ · 1 = eˣ</div>
+      <div class="box-notes" style="margin:0.5rem 0 0 0; border:none; background:transparent; padding-left:0;">
+        <p style="font-size:0.85rem; color: #888;">Standard limit used: lim[h→0] (eʰ−1)/h = 1</p>
+      </div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Product Rule <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <div class="math-block">d/dx[u·v] = u′v + uv′</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof from first principles <span class="star-badge">★</span></div>
+      <div class="math-block">y = uv
+y + δy = (u+δu)(v+δv) = uv + u·δv + v·δu + δu·δv
+δy = u·δv + v·δu + δu·δv
+δy/δx = u(δv/δx) + v(δu/δx) + δu(δv/δx)
+
+As δx → 0: δu → 0
+dy/dx = u(dv/dx) + v(du/dx) = uv′ + vu′</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Quotient Rule &amp; Chain Rule</div>
+    <div class="box-theorem">
+      <div class="box-label">Quotient Rule</div>
+      <div class="math-block">d/dx[u/v] = (u′v − uv′) / v²</div>
+    </div>
+    <div class="box-theorem" style="margin-top:0.5rem;">
+      <div class="box-label">Chain Rule</div>
+      <div class="math-block">If y = f(g(x)), then dy/dx = f′(g(x))·g′(x)
+Or: dy/dx = (dy/du)·(du/dx)</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Note</div>
+      <p>The chain rule proof is not on the LC HL examined proof list but must be applied. Intuition: "differentiate outside × differentiate inside".</p>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Fundamental Theorem of Calculus</div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>If F′(x) = f(x), then:</p>
+      <div class="math-block">∫ₐᵇ f(x) dx = F(b) − F(a)</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Notes on Integration</div>
+      <ul>
+        <li>Integration by substitution: if u = g(x), then du = g′(x) dx</li>
+        <li>Integration by parts: ∫u dv = uv − ∫v du</li>
+        <li>Riemann Sum: ∫ₐᵇ f(x) dx = lim[n→∞] Σ f(xᵢ)Δx</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SECTION 5: NUMBER THEORY -->
+<!-- ======================================================= -->
+<section id="number">
+  <div class="section-chapter">
+    <h2><span class="chapter-number">5</span>Number Theory</h2>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Infinitely Many Primes (Euclid) <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>There are infinitely many prime numbers.</p>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof by Contradiction <span class="star-badge">★</span></div>
+      <p>Suppose there are finitely many primes: p₁, p₂, ..., pₙ.</p>
+      <div class="math-block">Let N = (p₁ · p₂ · ··· · pₙ) + 1
+
+Case 1: N is prime.
+→ N is not in our list — contradiction.
+
+Case 2: N is composite.
+→ N has a prime factor p.
+→ p ≠ any pᵢ (dividing N by any pᵢ leaves remainder 1)
+→ p is a prime not in our list — contradiction.
+
+In both cases: contradiction. ∴ There are infinitely many primes.</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">√2 is Irrational <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>√2 cannot be expressed as p/q where p, q ∈ ℤ, q ≠ 0.</p>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof by Contradiction <span class="star-badge">★</span></div>
+      <div class="math-block">Suppose √2 = p/q in lowest terms (gcd(p,q) = 1).
+
+Then: 2 = p²/q²  →  p² = 2q²
+
+So p² is even  →  p is even. Write p = 2k.
+(2k)² = 2q²  →  4k² = 2q²  →  q² = 2k²
+
+So q² is even  →  q is even.
+
+But then gcd(p,q) ≥ 2, contradicting our assumption.
+∴ √2 is irrational.</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Quadratic Formula <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <div class="math-block">For ax² + bx + c = 0 (a ≠ 0):
+x = (−b ± √(b²−4ac)) / (2a)</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof by Completing the Square <span class="star-badge">★</span></div>
+      <div class="math-block">ax² + bx + c = 0
+x² + (b/a)x + c/a = 0
+(x + b/(2a))² = b²/(4a²) − c/a
+(x + b/(2a))² = (b²−4ac)/(4a²)
+x + b/(2a) = ±√(b²−4ac) / (2a)
+x = (−b ± √(b²−4ac)) / (2a)</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">The Discriminant Δ = b² − 4ac</div>
+      <ul>
+        <li>Δ &gt; 0 : two distinct real roots</li>
+        <li>Δ = 0 : one repeated root (x = −b/2a)</li>
+        <li>Δ &lt; 0 : no real roots (two complex conjugate roots)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SECTION 6: SEQUENCES & SERIES -->
+<!-- ======================================================= -->
+<section id="sequences">
+  <div class="section-chapter">
+    <h2><span class="chapter-number">6</span>Sequences &amp; Series</h2>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Geometric Series Formula <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Formula</div>
+      <div class="math-block">Sₙ = a(1 − rⁿ)/(1 − r)   for r ≠ 1
+S∞ = a/(1 − r)           for |r| &lt; 1</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof <span class="star-badge">★</span></div>
+      <div class="math-block">Sₙ = a + ar + ar² + ... + arⁿ⁻¹       ...(i)
+rSₙ =     ar + ar² + ... + arⁿ⁻¹ + arⁿ  ...(ii)
+
+Subtract (ii) from (i):
+Sₙ(1−r) = a − arⁿ = a(1−rⁿ)
+Sₙ = a(1−rⁿ)/(1−r)
+
+For |r| &lt; 1, as n → ∞: rⁿ → 0
+S∞ = a/(1−r)</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Arithmetic Series Formula <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Formula</div>
+      <div class="math-block">Sₙ = (n/2)(2a + (n−1)d) = (n/2)(a + l)</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof (Gauss method) <span class="star-badge">★</span></div>
+      <div class="math-block">Sₙ = a + (a+d) + (a+2d) + ... + l
+Sₙ = l + (l−d) + (l−2d) + ... + a
+
+Adding: 2Sₙ = n(a + l)
+Sₙ = (n/2)(a + l) = (n/2)(2a + (n−1)d)</div>
+      <div class="qed">□</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SECTION 7: STATISTICS -->
+<!-- ======================================================= -->
+<section id="stats">
+  <div class="section-chapter">
+    <h2><span class="chapter-number">7</span>Probability &amp; Statistics</h2>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Binomial Theorem <span class="star-badge">★ PROOF</span></div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <div class="math-block">(a+b)ⁿ = Σ C(n,k) aⁿ⁻ᵏ bᵏ   (k = 0 to n)
+C(n,k) = n! / (k!(n−k)!)</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Pascal's Identity (used in proof)</div>
+      <div class="math-block">C(n,r) = C(n−1,r−1) + C(n−1,r)
+
+Proof: C(n−1,r−1) + C(n−1,r)
+= (n−1)!/((r−1)!(n−r)!) + (n−1)!/(r!(n−1−r)!)
+= (n−1)![r + (n−r)] / (r!(n−r)!)
+= n! / (r!(n−r)!) = C(n,r)  □</div>
+    </div>
+    <div class="box-proof">
+      <div class="box-label">Proof by Induction <span class="star-badge">★</span></div>
+      <div class="math-block">Base cases: n=0: (a+b)⁰=1 ✓;  n=1: (a+b)¹=a+b ✓
+
+Inductive step: Assume true for n=k.
+(a+b)^(k+1) = (a+b)·Σ C(k,j)aᵏ⁻ʲbʲ
+= Σ C(k,j)aᵏ⁺¹⁻ʲbʲ + Σ C(k,j)aᵏ⁻ʲbʲ⁺¹
+
+Re-indexing and using Pascal's Identity:
+= Σ C(k+1,j)aᵏ⁺¹⁻ʲbʲ   (j=0 to k+1) ✓</div>
+      <div class="qed">□</div>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Pascal's Triangle</div>
+      <div class="math-block">Row 0:    1
+Row 1:   1  1
+Row 2:  1  2  1
+Row 3: 1  3  3  1
+Row 4: 1 4  6  4  1</div>
+      <p>Each entry is the sum of the two entries above it (Pascal's Identity).</p>
+    </div>
+  </div>
+
+  <div class="theorem-block">
+    <div class="theorem-title">Central Limit Theorem (Statement only)</div>
+    <div class="box-theorem">
+      <div class="box-label">Theorem Statement</div>
+      <p>If X₁, X₂, ..., Xₙ are independent random variables with mean μ and variance σ², then for large n, the sample mean X̄ is approximately normally distributed:</p>
+      <div class="math-block">X̄ ~ N(μ, σ²/n)   approximately</div>
+      <p>regardless of the distribution of the individual Xᵢ.</p>
+    </div>
+    <div class="box-notes">
+      <div class="box-label">Notes</div>
+      <ul>
+        <li>Rule of thumb: n ≥ 30 for the normal approximation</li>
+        <li>95% Confidence Interval: X̄ ± 1.96 · (σ/√n)</li>
+        <li>The proof (using moment generating functions) is not required</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SUMMARY TABLE -->
+<!-- ======================================================= -->
+<section id="summary">
+  <div class="section-chapter">
+    <h2><span class="chapter-number" style="background:var(--gold);">✓</span>Quick Reference — All Theorems</h2>
+  </div>
+
+  <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">★ = proof examinable &nbsp;|&nbsp; — = result must be known and applied but proof not required.</p>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:28%">Theorem</th>
+        <th style="width:56%">Key Result</th>
+        <th style="width:12%; text-align:center">Proof ★</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td class="thm-name">Vertically Opposite Angles</td><td class="thm-result">Vertically opposite angles are equal</td><td class="proof-yes">★</td></tr>
+      <tr><td>2</td><td class="thm-name">Isosceles Triangle</td><td class="thm-result">Base angles equal when two sides equal</td><td class="proof-yes">★</td></tr>
+      <tr><td>3</td><td class="thm-name">Angle Sum in Triangle</td><td class="thm-result">Angles sum to 180°</td><td class="proof-yes">★</td></tr>
+      <tr><td>4</td><td class="thm-name">Exterior Angle</td><td class="thm-result">Ext. angle = sum of two interior opposite angles</td><td class="proof-yes">★</td></tr>
+      <tr><td>5</td><td class="thm-name">Parallelogram</td><td class="thm-result">Opp. sides equal; opp. angles equal; diagonals bisect</td><td class="proof-yes">★</td></tr>
+      <tr><td>6</td><td class="thm-name">Thales / Basic Proportionality</td><td class="thm-result">Parallel line divides sides in equal ratio</td><td style="text-align:center; color:#aaa">—</td></tr>
+      <tr><td>7</td><td class="thm-name">Similar Triangles</td><td class="thm-result">Equiangular triangles are similar</td><td style="text-align:center; color:#aaa">—</td></tr>
+      <tr><td>8</td><td class="thm-name">Pythagoras' Theorem</td><td class="thm-result">|AB|² = |AC|² + |BC|² (right angle at C)</td><td class="proof-yes">★</td></tr>
+      <tr><td>9</td><td class="thm-name">Angle in Semicircle</td><td class="thm-result">Angle subtended by diameter = 90°</td><td class="proof-yes">★</td></tr>
+      <tr><td>10</td><td class="thm-name">Tangent ⊥ Radius</td><td class="thm-result">Tangent perpendicular to radius at contact point</td><td class="proof-yes">★</td></tr>
+      <tr><td>11</td><td class="thm-name">Equal Tangents</td><td class="thm-result">Tangents from an external point are equal</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Sine Rule</td><td class="thm-result">a/sinA = b/sinB = c/sinC</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Cosine Rule</td><td class="thm-result">a² = b² + c² − 2bc cosA</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Compound Angle</td><td class="thm-result">sin/cos (A±B) formulae</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Factor Theorem</td><td class="thm-result">(x−a)|f(x) iff f(a) = 0</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Induction — Σk</td><td class="thm-result">1+2+···+n = n(n+1)/2</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Induction — Σk²</td><td class="thm-result">1²+2²+···+n² = n(n+1)(2n+1)/6</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">De Moivre's Theorem</td><td class="thm-result">(cosθ + i sinθ)ⁿ = cos nθ + i sin nθ</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Derivative: xⁿ (first principles)</td><td class="thm-result">d/dx(xⁿ) = nxⁿ⁻¹</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Derivative: sin x (first principles)</td><td class="thm-result">d/dx(sin x) = cos x</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Product Rule</td><td class="thm-result">d/dx(uv) = u′v + uv′</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Geometric Series</td><td class="thm-result">Sₙ = a(1−rⁿ)/(1−r)</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Arithmetic Series</td><td class="thm-result">Sₙ = (n/2)(2a+(n−1)d)</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Infinitely Many Primes</td><td class="thm-result">No finite list of primes is complete</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">√2 is Irrational</td><td class="thm-result">√2 ∉ ℚ</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Quadratic Formula</td><td class="thm-result">x = (−b ± √(b²−4ac)) / 2a</td><td class="proof-yes">★</td></tr>
+      <tr><td>—</td><td class="thm-name">Binomial Theorem</td><td class="thm-result">(a+b)ⁿ = Σ C(n,k) aⁿ⁻ᵏ bᵏ</td><td class="proof-yes">★</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</div><!-- end main-wrapper -->
+
+<footer>
+  <p>Leaving Certificate Higher Level Mathematics — Theorems &amp; Proofs Reference Booklet</p>
+  <p style="margin-top:0.4rem;">Based on the Project Maths / SEC Higher Level Syllabus</p>
+</footer>
+
+</body>
+</html>
