@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laws of Indices</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<script>
+  MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+<style>
+  :root {
+    --ink: #1a1410;
+    --page: #faf8f3;
+    --cream: #f2ede3;
+    --red: #c0392b;
+    --gold: #b5862b;
+    --rule-line: #d4c9b0;
+    --highlight: #fff8e1;
+    --highlight-border: #e8c44a;
+    --muted: #6b5f4e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--page);
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 0 80px 0;
+  }
+
+  .page-header {
+    background: var(--ink); color: var(--page);
+    padding: 48px 40px 36px; position: relative; overflow: hidden;
+  }
+  .page-header::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 28px,
+      rgba(255,255,255,0.04) 28px, rgba(255,255,255,0.04) 29px);
+  }
+  .header-inner { max-width: 860px; margin: 0 auto; position: relative; }
+  .subject-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 62px);
+    font-weight: 900; line-height: 1.0; letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  h1 span { color: var(--gold); }
+  .subtitle { font-size: 15px; color: rgba(250,248,243,0.65); font-style: italic; font-weight: 300; }
+
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; background: var(--red); color: white;
+    font-family: 'Playfair Display', serif; font-weight: 700; font-size: 17px;
+    border-radius: 50%; flex-shrink: 0;
+  }
+
+  .content { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  .rule-card {
+    background: white; border-left: 4px solid var(--red);
+    margin: 36px 0; padding: 28px 32px 28px 28px;
+    box-shadow: 0 2px 12px rgba(26,20,16,0.07);
+    animation: fadeUp 0.5s ease both;
+  }
+  .rule-card:nth-child(1) { animation-delay: 0.05s; }
+  .rule-card:nth-child(2) { animation-delay: 0.10s; }
+  .rule-card:nth-child(3) { animation-delay: 0.15s; }
+  .rule-card:nth-child(4) { animation-delay: 0.20s; }
+  .rule-card:nth-child(5) { animation-delay: 0.25s; }
+  .rule-card:nth-child(6) { animation-delay: 0.30s; }
+  .rule-card:nth-child(7) { animation-delay: 0.35s; }
+  .rule-card:nth-child(8) { animation-delay: 0.40s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .rule-title-row {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--rule-line);
+  }
+  .rule-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--red); }
+
+  .formula-box {
+    background: var(--highlight); border: 2px solid var(--highlight-border);
+    padding: 18px 20px; margin: 16px 0; text-align: center;
+  }
+
+  .rule-summary {
+    background: var(--cream); border-left: 3px solid var(--gold);
+    padding: 12px 16px; margin: 16px 0; font-size: 15px; color: var(--muted); font-style: italic;
+  }
+
+  .worked { margin-top: 20px; }
+  .worked-label {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    font-weight: 600; color: var(--gold); margin-bottom: 12px;
+  }
+
+  .step-list { list-style: none; }
+  .step-list li {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px dashed var(--rule-line);
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Playfair Display', serif; font-weight: 700; font-size: 13px;
+    color: var(--muted); min-width: 18px; flex-shrink: 0;
+  }
+
+  .arrow { color: var(--red); margin: 0 6px; font-weight: 700; font-size: 18px; }
+
+  .ans {
+    background: var(--ink); color: var(--page);
+    font-weight: 700; padding: 3px 10px; margin-left: 4px;
+    display: inline-flex; align-items: center;
+  }
+
+  .note-box {
+    border: 1px solid var(--red); padding: 12px 16px;
+    margin-top: 16px; font-size: 14px; color: var(--red);
+  }
+  .note-box strong { font-weight: 700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .mini-example { background: var(--cream); padding: 14px 16px; font-size: 15px; }
+  .mini-example .label {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px; font-weight: 600;
+  }
+
+  hr.divider { border: none; border-top: 1px solid var(--rule-line); margin: 16px 0; }
+
+  .intro-strip { max-width: 860px; margin: 0 auto; padding: 28px 24px 0; }
+  .intro-box {
+    background: var(--cream); border-top: 3px solid var(--gold);
+    padding: 18px 22px; font-size: 15px; line-height: 1.75;
+  }
+  .intro-box strong { color: var(--red); }
+
+  .quick-ref { background: var(--ink); color: var(--page); margin: 48px 0 0; padding: 32px 24px; }
+  .quick-ref-inner { max-width: 860px; margin: 0 auto; }
+  .quick-ref h2 {
+    font-family: 'Playfair Display', serif; font-size: 20px;
+    color: var(--gold); margin-bottom: 20px; letter-spacing: 0.03em;
+  }
+  .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+  .ref-item {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 12px 14px;
+  }
+  .ref-item .ref-rule { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .ref-item .ref-desc { font-size: 12px; color: rgba(250,248,243,0.55); font-style: italic; }
+
+  .footer-rule {
+    max-width: 860px; margin: 40px auto 0; padding: 20px 24px 0;
+    border-top: 2px solid var(--ink); font-size: 13px; color: var(--muted);
+    font-style: italic; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+
+  @media (max-width: 580px) {
+    .two-col { grid-template-columns: 1fr; }
+    .rule-card { padding: 20px 16px; }
+    h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="header-inner">
+    <div class="subject-tag">Leaving Certificate Ordinary Level &nbsp;·&nbsp; Algebra</div>
+    <h1>Laws of <span>Indices</span></h1>
+    <p class="subtitle">Section 2.7 &nbsp;—&nbsp; Eight rules every student must know</p>
+  </div>
+</header>
+
+<div class="intro-strip">
+  <div class="intro-box">
+    <strong>What is an index?</strong> In the expression \(2^3 = 2 \times 2 \times 2 = 8\), the number <strong>3</strong> is called the <strong>index</strong> (or power). It tells us how many times the base (2) is multiplied by itself. The eight rules below show how indices behave when we multiply, divide, and combine them.
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- Rule 1 -->
+  <div class="rule-card">
+    <div class="rule-title-row">
+      <div class="section-num">1</div>
+      <div class="rule-title">Multiplication</div>
+    </div>
+    <div class="rule-summary">To multiply powers of the same base, <strong>add</strong> the indices.</div>
+    <div class="formula-box">\[ x^m \times x^n = x^{m+n} \]</div>
+    <div class="worked">
+      <div class="worked-label">Worked Examples</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> \(x^2 \times x^3 = x^{2+3}\) <span class="arrow">→</span> <span class="ans">\(x^5\)</span></li>
+        <li><span class="step-num">2</span> \(x^4 \times x^6 = x^{4+6}\) <span class="arrow">→</span> <span class="ans">\(x^{10}\)</span></li>
+        <li><span class="step-num">3</span> \(x^3 \times x = x^{3+1}\) <span class="arrow">→</span> <span class="ans">\(x^4\)</span> &nbsp;<em style="font-size:13px;color:var(--muted)">(remember: \(x = x^1\))</em></li>
+      </ul>
+    </div>
+    <div class="note-box"><strong>Watch out:</strong> This rule only works when the <em>base is the same</em>. You cannot simplify \(x^2 \times y^3\) any further.</div>
+  </div>
+
+  <!-- Rule 2 -->
+  <div class="rule-card">
+    <div class="rule-title-row">
+      <div class="section-num">2</div>
+      <div class="rule-title">Division</div>
+    </div>
+    <div class="rule-summary">To divide powers of the same base, <strong>subtract</strong> the indices.</div>
+    <div class="formula-box">\[ x^m \div x^n = x^{m-n} \]</div>
+    <div class="worked">
+      <div class="worked-label">Worked Examples</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> \(x^5 \div x^2 = x^{5-2}\) <span class="arrow">→</span> <span class="ans">\(x^3\)</span></li>
+        <li><span class="step-num">2</span> \(x^8 \div x^3 = x^{8-3}\) <span class="arrow">→</span> <span class="ans">\(x^5\)</span></li>
+        <li><span class="step-num">3</span> \(x^4 \div x^4 = x^{4-4} = x^0\) <span class="arrow">→</span> <span class="ans">\(1\)</span> &nbsp;<em style="font-size:13px;color:var(--muted)">(links to Rule 5)</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Rule 3 -->
+  <div class="rule-card">
+    <div class="rule-title-row">
+      <div class="section-num">3</div>
+      <div class="rule-title">Power to a Power</div>
+    </div>
+    <div class="rule-summary">To raise a power to a further power, <strong>multiply</strong> the indices.</div>
+    <div class="formula-box">\[ (x^m)^n = x^{m \times n} \]</div>
+    <div class="worked">
+      <div class="worked-label">Worked Examples</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> \((x^2)^3 = x^{2 \times 3}\) <span class="arrow">→</span> <span class="ans">\(x^6\)</span></li>
+        <li><span class="step-num">2</span> \((x^4)^3 = x^{4 \times 3}\) <span class="arrow">→</span> <span class="ans">\(x^{12}\)</span></li>
+        <li><span class="step-num">3</span> \((x^5)^2 = x^{5 \times 2}\) <span class="arrow">→</span> <span class="ans">\(x^{10}\)</span></li>
+      </ul>
+    </div>
+    <div class="note-box"><strong>Common mistake:</strong> Students sometimes add instead of multiply. \((x^2)^3\) is NOT \(x^5\) — it is \(x^6\).</div>
+  </div>
+
+  <!-- Rule 4 -->
+  <div class="rule-card">
+    <div class="rule-title-row">
+      <div class="section-num">4</div>
+      <div class="rule-title">A Product Raised to a Power</div>
+    </div>
+    <div class="rule-summary">When a product is raised to a power, <strong>each factor</strong> gets that power.</div>
+    <div class="formula-box">\[ (ab)^n = a^n \times b^n \]</div>
+    <div class="worked">
+      <div class="worked-label">Worked Examples</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> \((2x)^3 = 2^3 \times x^3\) <span class="arrow">→</span> <span class="ans">\(8x^3\)</span></li>
+        <li><span class="step-num">2</span> \((3x^2)^2 = 3^2 \times x^4\) <span class="arrow">→</span> <span class="ans">\(9x^4\)</span></li>
+        <li><span class="step-num">3</span> \((2xy)^4 = 2^4 \times x^4 \times y^4\) <span class="arrow">→</span> <span class="ans">\(16x^4y^4\)</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Rule 5 -->
+  <div class="rule-card">
+    <div class="rule-title-row">
+      <div class="section-num">5</div>
+      <div class="rule-title">Any Number to the Power of Zero is 1</div>
+    </div>
+    <div class="rule-summary">No matter what the base is, raising it to the power zero <strong>always gives 1</strong>.</div>
+    <div class="formula-box">\[ a^0 = 1 \]</div>
+    <div class="worked">
+      <div class="worked-label">Worked Examples</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> \(10^0\) <span class="arrow">→</span> <span class="ans">\(1\)</span></li>
+        <li><span class="step-num">2</span> \(x^0\) <span class="arrow">→</span> <span class="ans">\(1\)</span></li>
+        <li><span class="step-num">3</span> \((3ab)^0\) <span class="arrow">→</span> <span class="ans">\(1\)</span></li>
+        <li><span class="step-num">4</span> \(5 \times x^0 = 5 \times 1\) <span class="arrow">→</span> <span class="ans">\(5\)</span> &nbsp;<em style="font-size:13px;color:var(--muted)">(only the \(x^0\) becomes 1)</em></li>
+      </ul>
+    </div>
+    <div class="note-box"><strong>Why?</strong> From Rule 2: \(x^4 \div x^4 = x^0\). But any number divided by itself = 1. So \(x^0 = 1\).</div>
+  </div>
+
+  <!-- Rule 6 -->
+  <div class="rule-card">
+    <div class="rule-title-row">
+      <div class="section-num">6</div>
+      <div class="rule-title">Negative Indices</div>
+    </div>
+    <div class="rule-summary">A negative index means <strong>take the reciprocal</strong> (flip it).</div>
+    <div class="formula-box">\[ a^{-n} = \frac{1}{a^n} \]</div>
+    <div class="worked">
+      <div class="worked-label">Worked Examples</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> \(x^{-2} = \dfrac{1}{x^2}\)</li>
+        <li><span class="step-num">2</span> \(2^{-3} = \dfrac{1}{2^3} = \dfrac{1}{8}\) <span class="arrow">→</span> <span class="ans">\(\dfrac{1}{8}\)</span></li>
+        <li><span class="step-num">3</span> \(4^{-2} = \dfrac{1}{4^2} = \dfrac{1}{16}\) <span class="arrow">→</span> <span class="ans">\(\dfrac{1}{16}\)</span></li>
+        <li><span class="step-num">4</span> \(\dfrac{1}{x^3}\) can be written as <span class="arrow">→</span> <span class="ans">\(x^{-3}\)</span></li>
+      </ul>
+    </div>
+    <div class="note-box"><strong>Tip:</strong> Moving a power from the bottom of a fraction to the top (or vice versa) changes the sign of the index.</div>
+  </div>
+
+  <!-- Rule 7 -->
+  <div class="rule-card">
+    <div class="rule-title-row">
+      <div class="section-num">7</div>
+      <div class="rule-title">Fractional Indices</div>
+    </div>
+    <div class="rule-summary">A fractional index with 1 on top means take a <strong>root</strong>.</div>
+    <div class="formula-box">\[ x^{\frac{1}{n}} = \sqrt[n]{x} \]</div>
+    <div class="worked">
+      <div class="worked-label">Why? A quick proof for \(x^{\frac{1}{2}}\)</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> Using Rule 1: \(x^{\frac{1}{2}} \times x^{\frac{1}{2}} = x^{\frac{1}{2}+\frac{1}{2}} = x^1 = x\)</li>
+        <li><span class="step-num">2</span> But also: \(\sqrt{x} \times \sqrt{x} = x\)</li>
+        <li><span class="step-num">3</span> Therefore \(x^{\frac{1}{2}} = \sqrt{x}\) ✓</li>
+      </ul>
+    </div>
+    <hr class="divider">
+    <div class="two-col">
+      <div class="mini-example">
+        <div class="label">Example A</div>
+        \(25^{\frac{1}{2}} = \sqrt{25}\) <span class="arrow">→</span> <strong>5</strong>
+      </div>
+      <div class="mini-example">
+        <div class="label">Example B</div>
+        \(8^{\frac{1}{3}} = \sqrt[3]{8}\) <span class="arrow">→</span> <strong>2</strong>
+      </div>
+      <div class="mini-example">
+        <div class="label">Example C</div>
+        \(16^{\frac{1}{4}} = \sqrt[4]{16}\) <span class="arrow">→</span> <strong>2</strong>
+      </div>
+      <div class="mini-example">
+        <div class="label">Example D</div>
+        \(x^{\frac{1}{5}} = \sqrt[5]{x}\)
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule 8 -->
+  <div class="rule-card">
+    <div class="rule-title-row">
+      <div class="section-num">8</div>
+      <div class="rule-title">More Fractional Indices</div>
+    </div>
+    <div class="rule-summary">When the numerator is not 1: take the root <em>and</em> raise to the power.</div>
+    <div class="formula-box">\[ x^{\frac{m}{n}} = \left(\sqrt[n]{x}\right)^m \]</div>
+    <div class="worked">
+      <div class="worked-label">Strategy: root first, then power (keeps numbers smaller)</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> \(27^{\frac{2}{3}} = \left(\sqrt[3]{27}\right)^2 = 3^2\) <span class="arrow">→</span> <span class="ans">\(9\)</span></li>
+        <li><span class="step-num">2</span> \(8^{\frac{2}{3}} = \left(\sqrt[3]{8}\right)^2 = 2^2\) <span class="arrow">→</span> <span class="ans">\(4\)</span></li>
+        <li><span class="step-num">3</span> \(16^{\frac{3}{4}} = \left(\sqrt[4]{16}\right)^3 = 2^3\) <span class="arrow">→</span> <span class="ans">\(8\)</span></li>
+        <li><span class="step-num">4</span> \(32^{\frac{3}{5}} = \left(\sqrt[5]{32}\right)^3 = 2^3\) <span class="arrow">→</span> <span class="ans">\(8\)</span></li>
+      </ul>
+    </div>
+    <div class="note-box"><strong>Tip:</strong> Always do the root first — it keeps the numbers smaller and easier to work with.</div>
+  </div>
+
+</div>
+
+<!-- Quick Reference -->
+<div class="quick-ref">
+  <div class="quick-ref-inner">
+    <h2>Quick Reference — All 8 Rules</h2>
+    <div class="ref-grid">
+      <div class="ref-item">
+        <div class="ref-rule">\(x^m \times x^n = x^{m+n}\)</div>
+        <div class="ref-desc">Multiply → add indices</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-rule">\(x^m \div x^n = x^{m-n}\)</div>
+        <div class="ref-desc">Divide → subtract indices</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-rule">\((x^m)^n = x^{mn}\)</div>
+        <div class="ref-desc">Power to power → multiply</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-rule">\((ab)^n = a^n b^n\)</div>
+        <div class="ref-desc">Product raised to power</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-rule">\(a^0 = 1\)</div>
+        <div class="ref-desc">Zero index → always 1</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-rule">\(a^{-n} = \dfrac{1}{a^n}\)</div>
+        <div class="ref-desc">Negative index → reciprocal</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-rule">\(x^{\frac{1}{n}} = \sqrt[n]{x}\)</div>
+        <div class="ref-desc">Fractional index → root</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-rule">\(x^{\frac{m}{n}} = \left(\sqrt[n]{x}\right)^m\)</div>
+        <div class="ref-desc">Root first, then power</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-rule">
+  <span>Leaving Certificate Ordinary Level Mathematics</span>
+  <span>Section 2.7 — Laws of Indices</span>
+</div>
+
+</body>
+</html>
