@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Empirical Rule</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #f0b429;
+    --c1: #3b82f6;
+    --c2: #22c55e;
+    --c3: #f97316;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 3rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 1.8rem;
+  }
+
+  header .eyebrow {
+    font-size: .78rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: .5rem;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    color: var(--text);
+  }
+
+  header p {
+    margin-top: .5rem;
+    color: var(--muted);
+    font-size: .92rem;
+    font-weight: 300;
+    max-width: 480px;
+    margin-inline: auto;
+    line-height: 1.6;
+  }
+
+  .curve-wrapper {
+    width: 100%;
+    max-width: 960px;
+  }
+
+  svg#bell {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .9rem;
+    width: 100%;
+    max-width: 960px;
+    margin-top: 1.6rem;
+  }
+
+  .legend-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s;
+  }
+
+  .legend-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .legend-card.c1::before { background: var(--c1); }
+  .legend-card.c2::before { background: var(--c2); }
+  .legend-card.c3::before { background: var(--c3); }
+
+  .legend-card:hover { transform: translateY(-3px); }
+
+  .legend-card .range {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: .25rem;
+  }
+
+  .legend-card.c1 .range { color: var(--c1); }
+  .legend-card.c2 .range { color: var(--c2); }
+  .legend-card.c3 .range { color: var(--c3); }
+
+  .legend-card .pct-main {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .legend-card.c1 .pct-main { color: var(--c1); }
+  .legend-card.c2 .pct-main { color: var(--c2); }
+  .legend-card.c3 .pct-main { color: var(--c3); }
+
+  .legend-card .pct-label {
+    font-size: .75rem;
+    color: var(--muted);
+    margin-top: .2rem;
+  }
+
+  .legend-card .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: .7rem 0;
+  }
+
+  .legend-card .tail-info {
+    font-size: .8rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .legend-card .tail-info strong { color: var(--text); }
+
+  .keynote {
+    margin-top: 1.4rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.2rem;
+    max-width: 960px;
+    width: 100%;
+    font-size: .88rem;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .keynote strong { color: var(--text); }
+
+  @media (max-width: 600px) {
+    .legend { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Leaving Certificate · Ordinary Level Statistics</div>
+  <h1>The Empirical Rule</h1>
+  <p>For a normal distribution, almost all data falls within three standard deviations of the mean.</p>
+</header>
+
+<div class="curve-wrapper">
+  <!-- 
+    SVG viewBox is tall enough to stack the three brackets above the curve
+    without any overlap. Layout (top → bottom):
+      0–30   : padding
+      30–110 : bracket zone (3 brackets × ~26px each)
+      110–370: bell curve body
+      370–395: axis labels
+      395–420: mean label
+  -->
+  <svg id="bell" viewBox="0 0 960 430" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f97316" stop-opacity="0.50"/>
+        <stop offset="100%" stop-color="#f97316" stop-opacity="0.07"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#22c55e" stop-opacity="0.60"/>
+        <stop offset="100%" stop-color="#22c55e" stop-opacity="0.10"/>
+      </linearGradient>
+      <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.16"/>
+      </linearGradient>
+    </defs>
+
+    <g id="bands"></g>
+    <path id="curveLine" fill="none" stroke="#e6edf3" stroke-width="2.8" stroke-linejoin="round"/>
+    <line id="baseline" x1="60" y1="370" x2="900" y2="370" stroke="#30363d" stroke-width="1.5"/>
+    <g id="ticks"></g>
+    <g id="bracketLayer"></g>
+    <g id="segLabels" font-family="Source Sans 3, sans-serif" text-anchor="middle"></g>
+    <g id="axisLabels" font-family="Source Sans 3, sans-serif" text-anchor="middle"></g>
+    <g id="meanLabel"  font-family="Source Sans 3, sans-serif" text-anchor="middle"></g>
+  </svg>
+</div>
+
+<div class="legend">
+  <div class="legend-card c1">
+    <div class="range">μ ± 1σ</div>
+    <div class="pct-main">68%</div>
+    <div class="pct-label">of all data values</div>
+    <hr class="divider">
+    <div class="tail-info">
+      <strong>16%</strong> in each tail<br>
+      Cut-offs: <strong>16%</strong> &amp; <strong>84%</strong>
+    </div>
+  </div>
+  <div class="legend-card c2">
+    <div class="range">μ ± 2σ</div>
+    <div class="pct-main">95%</div>
+    <div class="pct-label">of all data values</div>
+    <hr class="divider">
+    <div class="tail-info">
+      <strong>2.5%</strong> in each tail<br>
+      Cut-offs: <strong>2.5%</strong> &amp; <strong>97.5%</strong>
+    </div>
+  </div>
+  <div class="legend-card c3">
+    <div class="range">μ ± 3σ</div>
+    <div class="pct-main">99.7%</div>
+    <div class="pct-label">of all data values</div>
+    <hr class="divider">
+    <div class="tail-info">
+      <strong>0.15%</strong> in each tail<br>
+      Cut-offs: <strong>0.15%</strong> &amp; <strong>99.85%</strong>
+    </div>
+  </div>
+</div>
+
+<div class="keynote">
+  <strong>Key points:</strong> The <strong>mean (μ)</strong> sits at the exact centre — it equals the median and mode in a normal distribution. Each step left or right is one <strong>standard deviation (σ)</strong>. The empirical rule only applies to <strong>normally distributed</strong> (bell-shaped) data. On the Leaving Cert you will most often use the <strong>95% rule (μ ± 2σ)</strong>.
+</div>
+
+<script>
+  // ── Layout constants ─────────────────────────────
+  const baseline  = 370;   // y of the x-axis
+  const peakY     = 115;   // y at the very top of the bell
+  const cx        = 480;   // x of the mean (centre)
+  const sigma     = 110;   // pixels per σ
+  const amplitude = baseline - peakY;
+
+  function gauss(x) {
+    return baseline - amplitude * Math.exp(-0.5 * Math.pow((x - cx) / sigma, 2));
+  }
+  function xOf(s) { return cx + s * sigma; }
+
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    return el;
+  }
+  function svgText(x, y, content, attrs) {
+    const el = svgEl('text', { x, y, ...attrs });
+    el.textContent = content;
+    return el;
+  }
+
+  // ── Curve path ───────────────────────────────────
+  function curvePath() {
+    const pts = [];
+    for (let x = xOf(-3.6); x <= xOf(3.6); x += 2) {
+      pts.push(`${x.toFixed(1)},${gauss(x).toFixed(1)}`);
+    }
+    return 'M' + pts.join(' L');
+  }
+
+  // ── Band fill path ───────────────────────────────
+  function bandPath(x1, x2) {
+    const pts = [];
+    for (let x = x1; x <= x2; x += 2) {
+      pts.push(`${x.toFixed(1)},${gauss(x).toFixed(1)}`);
+    }
+    pts.push(`${x2.toFixed(1)},${baseline}`, `${x1.toFixed(1)},${baseline}`);
+    return 'M' + pts.join(' L') + ' Z';
+  }
+
+  // ── Draw bands ───────────────────────────────────
+  const bandsG = document.getElementById('bands');
+  [
+    { x1: xOf(-3), x2: xOf(3), fill: 'url(#g3)' },
+    { x1: xOf(-2), x2: xOf(2), fill: 'url(#g2)' },
+    { x1: xOf(-1), x2: xOf(1), fill: 'url(#g1)' },
+  ].forEach(b => bandsG.appendChild(svgEl('path', { d: bandPath(b.x1, b.x2), fill: b.fill })));
+
+  // ── Curve line ───────────────────────────────────
+  document.getElementById('curveLine').setAttribute('d', curvePath());
+
+  // ── Tick lines ───────────────────────────────────
+  const ticksG = document.getElementById('ticks');
+  [-3,-2,-1,0,1,2,3].forEach(s => {
+    const x = xOf(s);
+    ticksG.appendChild(svgEl('line', {
+      x1: x, x2: x,
+      y1: gauss(x), y2: baseline,
+      stroke:            s === 0 ? '#f0b429' : '#30363d',
+      'stroke-width':    s === 0 ? '2.2' : '1.2',
+      'stroke-dasharray':s === 0 ? '' : '5 4'
+    }));
+  });
+
+  // ── Axis labels ──────────────────────────────────
+  const axG = document.getElementById('axisLabels');
+  const labelMap = {
+    '-3':'μ − 3σ','-2':'μ − 2σ','-1':'μ − σ',
+    '0':'μ','1':'μ + σ','2':'μ + 2σ','3':'μ + 3σ'
+  };
+  [-3,-2,-1,0,1,2,3].forEach(s => {
+    axG.appendChild(svgText(xOf(s), baseline + 26, labelMap[String(s)], {
+      fill:          s === 0 ? '#f0b429' : '#8b949e',
+      'font-size':   s === 0 ? '15' : '13',
+      'font-weight': s === 0 ? '600' : '400'
+    }));
+  });
+
+  // ── Segment % labels inside bands ────────────────
+  const segG = document.getElementById('segLabels');
+  [
+    { s1:-3, s2:-2, pct:'2.35%', color:'#f97316' },
+    { s1:-2, s2:-1, pct:'13.5%', color:'#22c55e' },
+    { s1:-1, s2: 0, pct:'34%',   color:'#3b82f6' },
+    { s1: 0, s2: 1, pct:'34%',   color:'#3b82f6' },
+    { s1: 1, s2: 2, pct:'13.5%', color:'#22c55e' },
+    { s1: 2, s2: 3, pct:'2.35%', color:'#f97316' },
+  ].forEach(d => {
+    const xc     = (xOf(d.s1) + xOf(d.s2)) / 2;
+    const midY   = gauss(xc);
+    const labelY = midY + (baseline - midY) * 0.50;
+    segG.appendChild(svgText(xc, labelY, d.pct, {
+      fill: d.color, 'font-size': '14', 'font-weight': '600'
+    }));
+  });
+
+  // ── Brackets above the curve ─────────────────────
+  //
+  // The three brackets are stacked with a fixed 28px gap so they
+  // never touch each other.  The innermost (68%) bracket sits
+  // just above the peak of the curve; each outer bracket is
+  // 28 px higher than the one inside it.
+  //
+  const brkG = document.getElementById('bracketLayer');
+
+  const BRACKET_BOTTOM = peakY - 10;  // y of the lowest (68%) bracket
+  const BRACKET_GAP    = 28;           // vertical space between brackets
+
+  [
+    { s1:-1, s2:1, label:'68%',   color:'#3b82f6', idx:0 },
+    { s1:-2, s2:2, label:'95%',   color:'#22c55e', idx:1 },
+    { s1:-3, s2:3, label:'99.7%', color:'#f97316', idx:2 },
+  ].forEach(b => {
+    const x1    = xOf(b.s1) + 5;
+    const x2    = xOf(b.s2) - 5;
+    const midX  = cx;
+    const lineY = BRACKET_BOTTOM - b.idx * BRACKET_GAP;
+    const capH  = 6;
+
+    // Horizontal span
+    brkG.appendChild(svgEl('line', {
+      x1, x2, y1: lineY, y2: lineY,
+      stroke: b.color, 'stroke-width': '2', opacity: '0.9'
+    }));
+    // Left cap
+    brkG.appendChild(svgEl('line', {
+      x1, x2: x1, y1: lineY - capH, y2: lineY + capH,
+      stroke: b.color, 'stroke-width': '2', opacity: '0.9'
+    }));
+    // Right cap
+    brkG.appendChild(svgEl('line', {
+      x1: x2, x2, y1: lineY - capH, y2: lineY + capH,
+      stroke: b.color, 'stroke-width': '2', opacity: '0.9'
+    }));
+    // Percentage label centred above the bracket line
+    brkG.appendChild(svgText(midX, lineY - 8, b.label, {
+      fill: b.color, 'font-size': '15', 'font-weight': '700',
+      'font-family': 'Source Sans 3, sans-serif', 'text-anchor': 'middle'
+    }));
+  });
+
+  // ── Mean label ───────────────────────────────────
+  document.getElementById('meanLabel').appendChild(
+    svgText(cx, baseline + 46, 'Mean = Median = Mode', {
+      fill: '#f0b429', 'font-size': '13', 'font-weight': '600'
+    })
+  );
+</script>
+
+</body>
+</html>
