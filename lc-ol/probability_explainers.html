@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probability – Chapter 6 Explainer</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Merriweather:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #f97316;
+    --red:    #dc2626;
+    --blue:   #2563eb;
+    --teal:   #0d9488;
+    --yellow: #fbbf24;
+    --green:  #16a34a;
+    --bg:     #fef9f0;
+    --card:   #ffffff;
+    --text:   #1e1b18;
+    --muted:  #6b7280;
+    --radius: 14px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0 0 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--orange) 0%, var(--red) 100%);
+    color: white;
+    padding: 40px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '6';
+    font-size: 200px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.1);
+    position: absolute;
+    right: -10px;
+    top: -30px;
+    line-height: 1;
+  }
+  header .chapter-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -1px;
+  }
+  header p {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-top: 10px;
+    max-width: 500px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── SECTION HEADINGS ── */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 48px 0 20px;
+  }
+  .section-title .badge {
+    background: var(--orange);
+    color: white;
+    font-weight: 900;
+    font-size: 15px;
+    border-radius: 50px;
+    padding: 6px 18px;
+    white-space: nowrap;
+  }
+  .section-title h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .section-title .line {
+    flex: 1;
+    height: 2px;
+    background: #e5e7eb;
+  }
+
+  /* ── CONCEPT CARDS ── */
+  .concept-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 28px;
+    margin-bottom: 18px;
+    border-left: 5px solid var(--orange);
+  }
+  .concept-card h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--red);
+  }
+  .concept-card p { font-size: 15.5px; }
+
+  /* ── KEY IDEAS GRID ── */
+  .key-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 600px) { .key-grid { grid-template-columns: 1fr; } }
+  .key-item {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .key-item .icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .key-item strong { display: block; font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .key-item p { font-size: 14px; color: var(--muted); }
+
+  /* ── PROBABILITY SCALE ── */
+  .scale-container {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 32px 24px;
+    margin-bottom: 18px;
+  }
+  .scale-container h3 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 22px;
+    color: var(--blue);
+  }
+  .scale-bar {
+    position: relative;
+    height: 16px;
+    background: linear-gradient(to right, #ef4444 0%, #fbbf24 40%, #22c55e 70%, #15803d 100%);
+    border-radius: 50px;
+    margin: 0 10px 10px;
+  }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 0 10px;
+    margin-top: 8px;
+  }
+  .scale-ticks {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    margin-bottom: 4px;
+  }
+  .scale-ticks span {
+    font-size: 12px;
+    color: #9ca3af;
+    text-align: center;
+  }
+  .scale-numbers {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    margin-bottom: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  /* ── WORKED EXAMPLE ── */
+  .worked-example {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .we-header {
+    background: var(--blue);
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .we-header .we-num {
+    background: rgba(255,255,255,0.25);
+    border-radius: 50px;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 15px; flex-shrink: 0;
+  }
+  .we-header h3 { font-size: 15px; font-weight: 800; }
+  .we-body { padding: 22px 24px; }
+  .we-question {
+    background: #eff6ff;
+    border-left: 4px solid var(--blue);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    font-size: 15px;
+  }
+  .we-question strong { color: var(--blue); display: block; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+
+  .answer-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 15px;
+  }
+  .answer-row:last-child { border-bottom: none; }
+  .answer-row .part {
+    font-weight: 800;
+    color: var(--blue);
+    min-width: 28px;
+    flex-shrink: 0;
+  }
+  .answer-row .verdict {
+    font-weight: 800;
+    padding: 2px 12px;
+    border-radius: 50px;
+    font-size: 13px;
+    margin-left: auto;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .v-impossible { background:#fee2e2; color:#b91c1c; }
+  .v-certain    { background:#dcfce7; color:#15803d; }
+  .v-evens      { background:#fef9c3; color:#854d0e; }
+  .v-likely     { background:#d1fae5; color:#065f46; }
+  .v-unlikely   { background:#fce7f3; color:#9d174d; }
+  .v-very-unlikely { background:#ede9fe; color:#5b21b6; }
+  .v-very-likely   { background:#cffafe; color:#164e63; }
+
+  .explanation {
+    font-size: 13.5px;
+    color: var(--muted);
+    flex: 1;
+  }
+
+  /* Cards questions (Q3 style) */
+  .cards-display {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+  .card-tile {
+    width: 44px; height: 60px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+  }
+  .card-tile.revealed { border-color: var(--orange); color: var(--orange); }
+  .card-tile.hidden   { background: #f3f4f6; color: #f3f4f6; }
+
+  /* Spinners */
+  .spinner-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin: 14px 0;
+    align-items: flex-end;
+  }
+  .spinner-wrap { text-align: center; }
+  .spinner-wrap svg { display: block; margin: 0 auto 6px; }
+  .spinner-wrap p { font-size: 13px; font-weight: 700; color: var(--muted); }
+
+  /* Bag visual */
+  .bag-wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 12px 0 16px;
+    flex-wrap: wrap;
+  }
+  .bead-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .bead {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.15);
+    box-shadow: inset -4px -4px 8px rgba(0,0,0,0.2);
+  }
+  .bead.red   { background: radial-gradient(circle at 35% 35%, #ff6b6b, #dc2626); }
+  .bead.blue  { background: radial-gradient(circle at 35% 35%, #60a5fa, #2563eb); }
+  .bead.green { background: radial-gradient(circle at 35% 35%, #4ade80, #16a34a); }
+  .bead.white { background: radial-gradient(circle at 35% 35%, #f9fafb, #d1d5db); }
+
+  /* Scale marker question */
+  .scale-q {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-top: 14px;
+  }
+  .scale-q p { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+  .scale-answer-bar {
+    position: relative;
+    height: 14px;
+    background: linear-gradient(to right, #ef4444 0%, #fbbf24 40%, #22c55e 70%, #15803d 100%);
+    border-radius: 50px;
+    margin-bottom: 6px;
+  }
+  .arrow-marker {
+    position: absolute;
+    top: -22px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .arrow-marker span { color: var(--text); margin-bottom: 1px; }
+  .arrow-marker::after { content:'▼'; color: var(--text); font-size: 14px; }
+
+  /* Tip boxes */
+  .tip-box {
+    background: #fffbeb;
+    border: 1.5px solid #fde68a;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 16px;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .tip-box .tip-icon { font-size: 20px; flex-shrink: 0; }
+
+  /* Formula box */
+  .formula-box {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 2px solid #93c5fd;
+    border-radius: var(--radius);
+    padding: 22px 28px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .formula-box h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--blue); margin-bottom: 14px; font-weight: 800; }
+  .formula {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .formula .frac {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 6px;
+  }
+  .frac .num { border-bottom: 2.5px solid var(--blue); padding-bottom: 2px; display: block; }
+  .frac .den { display: block; padding-top: 2px; }
+
+  /* Summary table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+  }
+  th {
+    background: var(--blue);
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    text-align: left;
+  }
+  td {
+    padding: 11px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f9fafb; }
+
+  /* Footer note */
+  .footer-note {
+    text-align: center;
+    padding: 30px 20px 10px;
+    font-size: 13px;
+    color: var(--muted);
+    border-top: 1px solid #e5e7eb;
+    margin-top: 40px;
+  }
+
+  /* Responsive tweaks */
+  @media print {
+    header::before { display: none; }
+    .worked-example { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chapter-label">Chapter 6 · Section 6.1</div>
+  <h1>Probability</h1>
+  <p>Worked examples to help you understand the key ideas before you try the exercises.</p>
+</header>
+
+<main>
+
+  <!-- ══ WHAT IS PROBABILITY? ══ -->
+  <div class="section-title">
+    <span class="badge">Part 1</span>
+    <h2>What is Probability?</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="concept-card">
+    <h3>The Big Idea</h3>
+    <p><strong>Probability</strong> is a way of measuring how likely something is to happen. We use a number between <strong>0</strong> and <strong>1</strong> to describe it.</p>
+  </div>
+
+  <div class="key-grid">
+    <div class="key-item">
+      <div class="icon">❌</div>
+      <div>
+        <strong>Impossible → 0</strong>
+        <p>It cannot happen. Probability = 0.</p>
+      </div>
+    </div>
+    <div class="key-item">
+      <div class="icon">✅</div>
+      <div>
+        <strong>Certain → 1</strong>
+        <p>It will definitely happen. Probability = 1.</p>
+      </div>
+    </div>
+    <div class="key-item">
+      <div class="icon">🪙</div>
+      <div>
+        <strong>Even Chance → ½</strong>
+        <p>Equally likely to happen or not happen.</p>
+      </div>
+    </div>
+    <div class="key-item">
+      <div class="icon">📊</div>
+      <div>
+        <strong>Everything else</strong>
+        <p>Falls somewhere between 0 and 1.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Probability Scale -->
+  <div class="scale-container">
+    <h3>The Probability Scale</h3>
+    <div class="scale-numbers">
+      <span>0</span><span>¼</span><span>½</span><span>¾</span><span>1</span>
+    </div>
+    <div class="scale-bar"></div>
+    <div class="scale-labels">
+      <span>Impossible</span>
+      <span>Unlikely</span>
+      <span>Even Chance</span>
+      <span>Likely</span>
+      <span>Certain</span>
+    </div>
+  </div>
+
+  <!-- Formula box -->
+  <div class="formula-box">
+    <h3>The Basic Formula</h3>
+    <div class="formula">
+      P(event) =
+      <span class="frac">
+        <span class="num">Number of favourable outcomes</span>
+        <span class="den">Total number of equally likely outcomes</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Summary table -->
+  <table>
+    <tr><th>Word</th><th>What it means</th><th>Probability value</th></tr>
+    <tr><td>Impossible</td><td>Cannot happen</td><td>0</td></tr>
+    <tr><td>Very unlikely</td><td>Could happen but very rarely</td><td>Close to 0</td></tr>
+    <tr><td>Unlikely</td><td>Less than half a chance</td><td>Between 0 and ½</td></tr>
+    <tr><td>Even chance</td><td>50/50</td><td>½ = 0.5</td></tr>
+    <tr><td>Likely</td><td>More than half a chance</td><td>Between ½ and 1</td></tr>
+    <tr><td>Very likely</td><td>Almost always happens</td><td>Close to 1</td></tr>
+    <tr><td>Certain</td><td>Definitely will happen</td><td>1</td></tr>
+  </table>
+
+
+  <!-- ══ WORKED EXAMPLES ══ -->
+  <div class="section-title">
+    <span class="badge">Part 2</span>
+    <h2>Worked Examples</h2>
+    <div class="line"></div>
+  </div>
+
+  <!-- ── WE 1: Impossible / Evens / Certain ── -->
+  <div class="worked-example">
+    <div class="we-header">
+      <div class="we-num">1</div>
+      <h3>Describing events as Impossible, Even Chance, or Certain</h3>
+    </div>
+    <div class="we-body">
+      <div class="we-question">
+        <strong>Question</strong>
+        Describe each event as <em>Impossible</em>, <em>Even Chance</em>, or <em>Certain</em>:
+        <ol type="a" style="margin-top:10px; padding-left:20px; display:flex; flex-direction:column; gap:5px;">
+          <li>You roll a normal die and get a number less than 10.</li>
+          <li>You flip a fair coin and it lands on heads.</li>
+          <li>You pick a card from a normal deck and it is a joker. (Standard decks have no jokers.)</li>
+          <li>January will have 31 days next year.</li>
+          <li>You roll a normal die and get a 7.</li>
+        </ol>
+      </div>
+
+      <div class="answer-row">
+        <span class="part">(a)</span>
+        <span class="explanation">A normal die shows 1–6. All of those are less than 10. It <em>must</em> happen.</span>
+        <span class="verdict v-certain">Certain</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(b)</span>
+        <span class="explanation">A fair coin has two sides — heads or tails. Each is equally likely.</span>
+        <span class="verdict v-evens">Even Chance</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(c)</span>
+        <span class="explanation">A standard 52-card deck contains no jokers. It cannot happen.</span>
+        <span class="verdict v-impossible">Impossible</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(d)</span>
+        <span class="explanation">January always has 31 days — it never changes.</span>
+        <span class="verdict v-certain">Certain</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(e)</span>
+        <span class="explanation">A normal die only goes up to 6. Getting a 7 is not possible.</span>
+        <span class="verdict v-impossible">Impossible</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── WE 2: Seven-label scale ── -->
+  <div class="worked-example">
+    <div class="we-header" style="background: var(--teal);">
+      <div class="we-num">2</div>
+      <h3>Placing events on a 7-label probability scale</h3>
+    </div>
+    <div class="we-body">
+      <div class="we-question">
+        <strong>Question</strong>
+        The scale has seven labels: <em>Impossible, Very unlikely, Unlikely, Even Chance, Likely, Very likely, Certain.</em><br><br>
+        Choose the best label for each event:
+        <ol type="a" style="margin-top:10px; padding-left:20px; display:flex; flex-direction:column; gap:5px;">
+          <li>You will score 6 on a single roll of a normal die.</li>
+          <li>It will be dark outside at midnight tonight.</li>
+          <li>You will draw a heart from a shuffled deck of 52 cards.</li>
+          <li>You toss a coin — it shows tails.</li>
+          <li>You pick a month at random and it starts with the letter J.</li>
+          <li>A player scores on a penalty kick in soccer.</li>
+          <li>You roll a die and get an odd number.</li>
+        </ol>
+      </div>
+
+      <div class="answer-row">
+        <span class="part">(a)</span>
+        <span class="explanation">Only 1 out of 6 outcomes is a 6. Low chance.</span>
+        <span class="verdict v-unlikely">Unlikely</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(b)</span>
+        <span class="explanation">It is always dark at midnight. This is certain.</span>
+        <span class="verdict v-certain">Certain</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(c)</span>
+        <span class="explanation">13 hearts out of 52 cards = ¼ chance. Less than even, more than very unlikely.</span>
+        <span class="verdict v-unlikely">Unlikely</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(d)</span>
+        <span class="explanation">Heads or tails — exactly 50/50.</span>
+        <span class="verdict v-evens">Even Chance</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(e)</span>
+        <span class="explanation">3 months start with J (January, June, July) out of 12. P = 3/12 = ¼ — lower than evens.</span>
+        <span class="verdict v-unlikely">Unlikely</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(f)</span>
+        <span class="explanation">Professional penalty kicks are scored most of the time — well above evens.</span>
+        <span class="verdict v-very-likely">Very likely</span>
+      </div>
+      <div class="answer-row">
+        <span class="part">(g)</span>
+        <span class="explanation">3 odd numbers (1, 3, 5) out of 6 = ½. That's exactly even.</span>
+        <span class="verdict v-evens">Even Chance</span>
+      </div>
+
+      <div class="tip-box">
+        <span class="tip-icon">💡</span>
+        <span><strong>Key tip:</strong> When you're not sure, try to work out a fraction first. If it equals ½ → Even Chance. Less than ½ → Unlikely side. More than ½ → Likely side. Close to 0 → Very unlikely. Close to 1 → Very likely.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── WE 3: Cards — reasoning question ── -->
+  <div class="worked-example">
+    <div class="we-header" style="background: var(--red);">
+      <div class="we-num">3</div>
+      <h3>Reasoning about cards — what is more likely?</h3>
+    </div>
+    <div class="we-body">
+      <div class="we-question">
+        <strong>Question</strong>
+        Sarah has these nine cards face-down on a table:
+        <div class="cards-display" style="margin:12px 0;">
+          <div class="card-tile">2</div>
+          <div class="card-tile">6</div>
+          <div class="card-tile">10</div>
+          <div class="card-tile">3</div>
+          <div class="card-tile">8</div>
+          <div class="card-tile">1</div>
+          <div class="card-tile">12</div>
+          <div class="card-tile">5</div>
+          <div class="card-tile">9</div>
+        </div>
+        She turns one over — it shows <strong>6</strong>.
+        <div class="cards-display" style="margin:8px 0;">
+          <div class="card-tile revealed">6</div>
+          <div class="card-tile hidden">?</div>
+          <div class="card-tile hidden">?</div>
+          <div class="card-tile hidden">?</div>
+          <div class="card-tile hidden">?</div>
+          <div class="card-tile hidden">?</div>
+          <div class="card-tile hidden">?</div>
+          <div class="card-tile hidden">?</div>
+          <div class="card-tile hidden">?</div>
+        </div>
+        She turns over another card. Answer these questions:
+        <ol type="i" style="margin-top:10px; padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+          <li>Is it more likely the next card shows an even number or an odd number? Explain.</li>
+          <li>Is it more likely the next card shows a number greater than 6 or less than 6? Explain.</li>
+        </ol>
+      </div>
+
+      <p style="font-size:14px; font-weight:700; margin-bottom:10px; color: var(--red);">Working it out:</p>
+      <p style="font-size:14px; margin-bottom:14px;">After removing the 6, the remaining 8 cards are: <strong>2, 10, 3, 8, 1, 12, 5, 9</strong></p>
+
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+        <span style="font-weight:800; color:var(--red);">(i) Even or Odd?</span>
+        <p style="font-size:14.5px;">Even numbers left: 2, 10, 8, 12 → <strong>4 cards</strong><br>
+        Odd numbers left: 3, 1, 5, 9 → <strong>4 cards</strong><br>
+        <em>P(even) = 4/8 = ½ &nbsp;&nbsp; P(odd) = 4/8 = ½</em><br>
+        ✅ <strong>Both are equally likely — it's an even chance either way.</strong></p>
+      </div>
+
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+        <span style="font-weight:800; color:var(--red);">(ii) Greater than 6 or Less than 6?</span>
+        <p style="font-size:14.5px;">Greater than 6: 10, 8, 12, 9 → <strong>4 cards</strong><br>
+        Less than 6: 2, 3, 1, 5 → <strong>4 cards</strong><br>
+        <em>P(>6) = 4/8 = ½ &nbsp;&nbsp; P(&lt;6) = 4/8 = ½</em><br>
+        ✅ <strong>Again, both equally likely — even chance.</strong></p>
+      </div>
+
+      <div class="tip-box">
+        <span class="tip-icon">⚠️</span>
+        <span><strong>Important:</strong> Once a card is turned over and removed, always count what's <em>left</em>. Here we started with 9 cards, one was removed, so 8 remain.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── WE 4: Probability scale with arrows ── -->
+  <div class="worked-example">
+    <div class="we-header" style="background: var(--green);">
+      <div class="we-num">4</div>
+      <h3>Placing arrows on a probability scale</h3>
+    </div>
+    <div class="we-body">
+      <div class="we-question">
+        <strong>Question</strong>
+        A bag contains beads:
+        <div class="bag-wrap">
+          <div class="bead-list">
+            <div class="bead red" title="Red"></div>
+            <div class="bead red" title="Red"></div>
+            <div class="bead red" title="Red"></div>
+            <div class="bead red" title="Red"></div>
+            <div class="bead blue" title="Blue"></div>
+            <div class="bead blue" title="Blue"></div>
+            <div class="bead green" title="Green"></div>
+            <div class="bead white" title="White"></div>
+          </div>
+          <span style="font-size:14px; color:var(--muted);">4 red, 2 blue, 1 green, 1 white → 8 beads total</span>
+        </div>
+        One bead is taken out without looking. Place an arrow on the probability scale to show the probability of:
+        <ol type="i" style="margin-top:10px; padding-left:20px; display:flex; flex-direction:column; gap:5px;">
+          <li>picking a red bead</li>
+          <li>picking a blue bead</li>
+          <li>picking a white bead</li>
+          <li>picking a yellow bead</li>
+        </ol>
+      </div>
+
+      <p style="font-size:14px; font-weight:700; margin-bottom:12px; color: var(--green);">Calculating each probability:</p>
+
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span style="font-weight:800;">(i) Red: 4 out of 8 → P = 4/8 = <strong>½</strong></span>
+        <span class="explanation">Exactly half the beads are red → even chance.</span>
+      </div>
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span style="font-weight:800;">(ii) Blue: 2 out of 8 → P = 2/8 = <strong>¼</strong></span>
+        <span class="explanation">Less than ½ → unlikely (but not very unlikely).</span>
+      </div>
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span style="font-weight:800;">(iii) White: 1 out of 8 → P = 1/8</span>
+        <span class="explanation">Low probability → unlikely, closer to impossible than ½.</span>
+      </div>
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span style="font-weight:800;">(iv) Yellow: 0 out of 8 → P = 0</span>
+        <span class="explanation">There are no yellow beads in the bag → Impossible.</span>
+      </div>
+
+      <div class="scale-q">
+        <p>Here is what the scale looks like with arrows marked:</p>
+        <div class="scale-answer-bar">
+          <!-- P=0: 0%, P=1/8: 12.5%, P=1/4: 25%, P=1/2: 50% -->
+          <div class="arrow-marker" style="left:0%"><span>Yellow</span></div>
+          <div class="arrow-marker" style="left:12.5%"><span>White</span></div>
+          <div class="arrow-marker" style="left:25%"><span>Blue</span></div>
+          <div class="arrow-marker" style="left:50%"><span>Red</span></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#6b7280; margin-top:24px; padding: 0 4px;">
+          <span>0 (Impossible)</span><span>½ (Even Chance)</span><span>1 (Certain)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── WE 5: Spinners ── -->
+  <div class="worked-example">
+    <div class="we-header" style="background: #7c3aed;">
+      <div class="we-num">5</div>
+      <h3>Reading spinners — comparing probability of colours</h3>
+    </div>
+    <div class="we-body">
+      <div class="we-question">
+        <strong>Question</strong>
+        Here are three spinners. Each is divided into equal sections.
+        <div class="spinner-row">
+          <!-- Spinner A: 4 sections: 2 red, 1 blue, 1 yellow -->
+          <div class="spinner-wrap">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle cx="55" cy="55" r="50" fill="#e5e7eb"/>
+              <!-- 4 sectors of 90deg each -->
+              <!-- Red (top-left) -->
+              <path d="M55,55 L55,5 A50,50 0 0,1 105,55 Z" fill="#dc2626"/>
+              <!-- Red (top-right) -->
+              <path d="M55,55 L105,55 A50,50 0 0,1 55,105 Z" fill="#dc2626"/>
+              <!-- Blue (bottom-left) -->
+              <path d="M55,55 L55,105 A50,50 0 0,1 5,55 Z" fill="#2563eb"/>
+              <!-- Yellow (bottom-right flipped) -->
+              <path d="M55,55 L5,55 A50,50 0 0,1 55,5 Z" fill="#fbbf24"/>
+              <circle cx="55" cy="55" r="5" fill="white"/>
+            </svg>
+            <p>Spinner A<br>(2 red, 1 blue, 1 yellow)</p>
+          </div>
+          <!-- Spinner B: 6 sections: 1 red, 1 blue, 4 green -->
+          <div class="spinner-wrap">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle cx="55" cy="55" r="50" fill="#e5e7eb"/>
+              <!-- 6 sectors of 60deg -->
+              <!-- green x4 -->
+              <path d="M55,55 L55,5 A50,50 0 0,1 98.3,30 Z" fill="#16a34a"/>
+              <path d="M55,55 L98.3,30 A50,50 0 0,1 98.3,80 Z" fill="#16a34a"/>
+              <path d="M55,55 L98.3,80 A50,50 0 0,1 55,105 Z" fill="#16a34a"/>
+              <path d="M55,55 L55,105 A50,50 0 0,1 11.7,80 Z" fill="#16a34a"/>
+              <!-- red -->
+              <path d="M55,55 L11.7,80 A50,50 0 0,1 11.7,30 Z" fill="#dc2626"/>
+              <!-- blue -->
+              <path d="M55,55 L11.7,30 A50,50 0 0,1 55,5 Z" fill="#2563eb"/>
+              <circle cx="55" cy="55" r="5" fill="white"/>
+            </svg>
+            <p>Spinner B<br>(4 green, 1 red, 1 blue)</p>
+          </div>
+          <!-- Spinner C: 3 sections: 1 red, 1 yellow, 1 blue — equal -->
+          <div class="spinner-wrap">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle cx="55" cy="55" r="50" fill="#e5e7eb"/>
+              <!-- 3 sectors of 120deg -->
+              <path d="M55,55 L55,5 A50,50 0 0,1 98.3,80 Z" fill="#dc2626"/>
+              <path d="M55,55 L98.3,80 A50,50 0 0,1 11.7,80 Z" fill="#fbbf24"/>
+              <path d="M55,55 L11.7,80 A50,50 0 0,1 55,5 Z" fill="#2563eb"/>
+              <circle cx="55" cy="55" r="5" fill="white"/>
+            </svg>
+            <p>Spinner C<br>(1 red, 1 yellow, 1 blue)</p>
+          </div>
+        </div>
+        <ol type="i" style="margin-top:6px; padding-left:20px; display:flex; flex-direction:column; gap:5px;">
+          <li>Which spinner has an even chance of stopping on red?</li>
+          <li>Which spinner is most likely to stop on green?</li>
+          <li>What is the probability of Spinner C stopping on yellow?</li>
+        </ol>
+      </div>
+
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span style="font-weight:800;">(i) Even chance of red?</span>
+        <p style="font-size:14.5px;">
+          Spinner A: P(red) = 2/4 = <strong>½</strong> ✅<br>
+          Spinner B: P(red) = 1/6 — too low.<br>
+          Spinner C: P(red) = 1/3 — less than ½.<br>
+          <strong>Answer: Spinner A</strong>
+        </p>
+      </div>
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span style="font-weight:800;">(ii) Most likely to stop on green?</span>
+        <p style="font-size:14.5px;">
+          Only Spinner B has green — and 4 out of 6 sections are green.<br>
+          P(green on B) = 4/6 = ⅔. <strong>Answer: Spinner B</strong>
+        </p>
+      </div>
+      <div class="answer-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span style="font-weight:800;">(iii) P(yellow on C)?</span>
+        <p style="font-size:14.5px;">
+          Spinner C has 3 equal sections. Yellow takes up 1 section.<br>
+          P(yellow) = <strong>1/3</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="footer-note">
+    <p>Text &amp; Tests 3 · Ordinary Level · Chapter 6 — Probability &amp; Chance · Section 6.1<br>
+    Worked examples for class use. Now try Exercise 6.1 in your textbook!</p>
+  </div>
+
+</main>
+</body>
+</html>
