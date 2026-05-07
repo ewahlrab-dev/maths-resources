@@ -1,0 +1,183 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.container { padding: 1rem 0; }
+.nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.nav select { flex: 1; min-width: 180px; }
+.nav-arrows { display: flex; gap: 6px; }
+.nav-arrows button { padding: 6px 14px; font-size: 14px; }
+.report-header { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 14px; }
+.avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--color-background-info); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 500; color: var(--color-text-info); flex-shrink: 0; }
+.student-name { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.student-class { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+.stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
+.stat-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.subjects-section { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+.section-title { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.subject-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.subject-row:last-child { border-bottom: none; }
+.subject-name { font-size: 14px; color: var(--color-text-primary); width: 220px; flex-shrink: 0; }
+.bar-wrap { flex: 1; background: var(--color-background-secondary); border-radius: 3px; height: 8px; overflow: hidden; }
+.bar { height: 8px; border-radius: 3px; transition: width 0.3s; }
+.score-label { font-size: 13px; font-weight: 500; min-width: 42px; text-align: right; }
+.participation { font-size: 13px; color: var(--color-text-secondary); margin-top: 0.75rem; padding-top: 0.75rem; border-top: 0.5px solid var(--color-border-tertiary); }
+.no-data { font-size: 13px; color: var(--color-text-tertiary); font-style: italic; }
+</style>
+<div class="container">
+  <div class="nav">
+    <select id="studentSelect"></select>
+    <div class="nav-arrows">
+      <button id="prevBtn">&#8592;</button>
+      <button id="nextBtn">&#8594;</button>
+    </div>
+  </div>
+  <div id="reportArea"></div>
+</div>
+<script>
+const MAX_CREDITS = {
+  'Irish': 10, 'English': 10, 'Maths': 10, 'LIFT': 10, 'PE': 10,
+  'Active Flag': 10, 'Local & Global Citizenship': 10, 'Work Experience': 10,
+  'ePortfolio': 50, 'Tuesday Morning Option': 10, 'Art': 10, 'Music': 10,
+  'Drama': 10, 'Literacy Through Fashion': 10, 'Politics & Society': 10,
+  'History': 10, 'ICT': 10, 'Law': 10, 'Sustainability': 10, 'RE': 10,
+  'Choose Tec': 10, 'Good Food': 10, 'Dragons Den': 10, 'Wellness': 10,
+  'Geography': 10, "It's Your Future": 10, 'Horticulture': 10,
+  'PE Expo': 10, 'Sci Fest': 10, 'Biology': 10, 'Spanish': 10,
+  'Japanese': 10, 'Multiculture': 10, 'French': 10
+};
+
+const students = [
+  { name: "Alannah", scores: { 'Irish': 0, 'LIFT': 0, 'Local & Global Citizenship': 3, 'Drama': 0, 'History': 5, "It's Your Future": 3, 'French': 10 }, participation: "22/22" },
+  { name: "Alex K", scores: { 'Irish': 7, 'Maths': [7,4], 'LIFT': 0, 'PE': [6,8,9], 'Active Flag': [7,8,9], 'Local & Global Citizenship': 3, 'Work Experience': [7,7,8], 'Drama': 8, 'Literacy Through Fashion': 7, 'History': 8, 'ICT': 10, "It's Your Future": 9, 'Spanish': 7, 'Japanese': 6, 'French': 6 }, participation: "20/18" },
+  { name: "Alex T", scores: { 'Irish': 7, 'Maths': [6,8], 'LIFT': 8, 'PE': [6,6,7], 'Active Flag': [8,6,8], 'Local & Global Citizenship': 8, 'Work Experience': [5,6,7], 'Drama': 10, 'Literacy Through Fashion': 8, 'History': 7, 'ICT': 10, "It's Your Future": 2, 'Spanish': 8, 'Japanese': 5, 'French': 6, 'Music': 8 }, participation: "18/16" },
+  { name: "Brody", scores: { 'Irish': 0, 'English': [0,0], 'Maths': 0, 'LIFT': 0, 'PE': [4,0,0], 'Active Flag': [2,0,0], 'Local & Global Citizenship': 0, 'Work Experience': [0,0,0], 'Drama': 0, 'Literacy Through Fashion': 3, "It's Your Future": 2, 'Spanish': 2, 'French': 0, 'Music': 0 }, participation: "4/0" },
+  { name: "Brooke", scores: { 'Irish': 7, 'Maths': [5,4], 'LIFT': 0, 'PE': [6,7,7], 'Active Flag': [9,8,9], 'Local & Global Citizenship': 7, 'Work Experience': [8,5,5], 'Drama': 10, 'Literacy Through Fashion': 6, 'History': 5, 'ICT': 5, "It's Your Future": 10, 'Spanish': 9, 'Japanese': 5, 'French': 0, 'Music': 10 }, participation: "20/22" },
+  { name: "Cheryl", scores: { 'Irish': 0, 'English': [0,0], 'Maths': 2, 'LIFT': 0, 'PE': [0,0,0], 'Active Flag': [2,0,0], 'Local & Global Citizenship': 0, 'Drama': 0, 'Literacy Through Fashion': 2, "It's Your Future": 0, 'Spanish': 0, 'French': 0, 'Music': 0 }, participation: "6/0" },
+  { name: "Cillian", scores: { 'Irish': 0, 'English': [0,0], 'Maths': 0, 'LIFT': 0, 'PE': [0,0,0], 'Active Flag': [0,0,0], 'Local & Global Citizenship': 0, 'Drama': 0, "It's Your Future": 0, 'Spanish': 0, 'French': 0, 'Music': 0 }, participation: "0/0" },
+  { name: "Clayton", scores: { 'Irish': 0, 'Maths': [2,2], 'LIFT': 2, 'PE': [7,6,6], 'Active Flag': [5,7,9], 'Local & Global Citizenship': 3, 'Work Experience': [5,2,0], 'Drama': 10, 'Literacy Through Fashion': 5, "It's Your Future": 1, 'Spanish': 4, 'Japanese': 4, 'French': 0, 'Music': 0 }, participation: "12/14" },
+  { name: "Daniel", scores: { 'Irish': 8, 'Maths': [8,5], 'LIFT': 8, 'PE': [8,8,9], 'Active Flag': [9,10,10], 'Local & Global Citizenship': 8, 'Work Experience': [10,10,8], 'Drama': 10, 'Literacy Through Fashion': 10, 'History': 10, 'ICT': 10, "It's Your Future": 10, 'Spanish': 9, 'Japanese': 5, 'French': 8, 'Music': 10 }, participation: "2525" },
+  { name: "Ella", scores: { 'Irish': 3, 'English': [0,0], 'Maths': 2, 'LIFT': 0, 'PE': [5,4,0], 'Active Flag': [5,4,0], 'Local & Global Citizenship': 3, 'Work Experience': [1,0,0], 'Drama': 5, 'Literacy Through Fashion': 2, "It's Your Future": 1, 'French': 2, 'Music': 6 }, participation: "6/8" },
+  { name: "Evan", scores: { 'Irish': 0, 'English': [0,0], 'Maths': 2, 'LIFT': 0, 'PE': [6,0,0], 'Active Flag': [5,0,0], 'Local & Global Citizenship': 0, 'Work Experience': [0,0,0], 'Drama': 2, 'Literacy Through Fashion': 2, "It's Your Future": 0, 'Spanish': 2, 'French': 0, 'Music': 8 }, participation: "6/0" },
+  { name: "Jack", scores: { 'Irish': 8, 'Maths': [7,6], 'LIFT': 8, 'PE': [8,7,8], 'Active Flag': [8,10,9], 'Local & Global Citizenship': 8, 'Work Experience': [5,7,8], 'Drama': 10, 'Literacy Through Fashion': 7, 'History': 10, 'ICT': 10, "It's Your Future": 0, 'Spanish': 0, 'Japanese': 5, 'French': 6, 'Music': 8 }, participation: "24/25" },
+  { name: "John", scores: { 'Irish': 0, 'English': [0,0], 'LIFT': 0, 'PE': [0,0,0], 'Active Flag': [0,0,0], 'Local & Global Citizenship': 0, 'Drama': 0, "It's Your Future": 0, 'Spanish': 8, 'French': 0, 'Music': 0 }, participation: "0/0" },
+  { name: "Kamile", scores: { 'Irish': 0, 'LIFT': 0, 'PE': [4], 'Active Flag': [4,4], 'Local & Global Citizenship': 5, 'Drama': 2, 'Literacy Through Fashion': 0, "It's Your Future": 2, 'Spanish': 0, 'French': 0, 'Music': 0 }, participation: "16/14" },
+  { name: "Kathlyn", scores: { 'Irish': 0, 'Maths': 0, 'LIFT': 0, 'PE': [4,4,4], 'Active Flag': [4,3,2], 'Local & Global Citizenship': 0, 'Work Experience': [0,0], 'Drama': 2, 'History': 1, "It's Your Future": 1, 'Spanish': 0, 'French': 2, 'Music': 8 }, participation: "14/6" },
+  { name: "Katie", scores: { 'Irish': 5, 'Maths': [4,3], 'LIFT': 0, 'PE': [5,6,7], 'Active Flag': [4,6,8], 'Local & Global Citizenship': 0, 'Work Experience': [6,8,9], 'Drama': 8, 'Literacy Through Fashion': 2, 'History': 8, 'ICT': 5, "It's Your Future": 5, 'Spanish': 0, 'Japanese': 5, 'French': 2, 'Music': 8 }, participation: "15/14" },
+  { name: "Kayla", scores: { 'Irish': 8, 'Maths': [7,5], 'LIFT': 0, 'PE': [7,5,5], 'Active Flag': [9,8,6], 'Local & Global Citizenship': 7, 'Work Experience': [8,6,5], 'Drama': 10, 'Literacy Through Fashion': 9, 'History': 10, 'ICT': 5, "It's Your Future": 9, 'Spanish': 7, 'Japanese': 6, 'French': 7, 'Music': 10 }, participation: "25/25" },
+  { name: "Kayleigh", scores: { 'Irish': 8, 'Maths': [7,5], 'LIFT': 5, 'PE': [7,5,6], 'Active Flag': [9,8,6], 'Local & Global Citizenship': 7, 'Work Experience': [8,7,6], 'Drama': 10, 'Literacy Through Fashion': 9, 'History': 10, 'ICT': 5, "It's Your Future": 8, 'Spanish': 0, 'Japanese': 6, 'French': 7, 'Music': 10 }, participation: "25/25" },
+  { name: "Kesha", scores: { 'Irish': 3, 'Maths': 0, 'LIFT': 0, 'PE': [3,3,3], 'Active Flag': [3,4,2], 'Local & Global Citizenship': 0, 'Work Experience': [0,0], 'Drama': 8, "It's Your Future": 0, 'Spanish': 9, 'French': 0, 'Music': 2 }, participation: "10/8" },
+  { name: "Kian", scores: { 'Irish': 6, 'Maths': [6,5], 'LIFT': 5, 'PE': [6,6,7], 'Active Flag': [6,7,4], 'Local & Global Citizenship': 8, 'Work Experience': [0,4,3], 'Drama': 8, 'Literacy Through Fashion': 3, 'History': 5, 'ICT': 5, "It's Your Future": 1, 'Spanish': 0, 'Japanese': 5, 'French': 0, 'Music': 0 }, participation: "16/18" },
+  { name: "Lalya", scores: { 'Irish': 5, 'Maths': [4,2], 'LIFT': 0, 'PE': [4,4,4], 'Active Flag': [5,4,4], 'Local & Global Citizenship': 0, 'Work Experience': [0,0,3], 'Drama': 8, "It's Your Future": 1, 'Spanish': 4, 'Japanese': 4, 'French': 0, 'Music': 5, 'ICT': 7 }, participation: "10/10" },
+  { name: "Leighton", scores: { 'Irish': 7, 'Maths': [7,4], 'LIFT': 5, 'PE': [9,9,9], 'Active Flag': [8,10,10], 'Local & Global Citizenship': 8, 'Work Experience': [8,7,6], 'Drama': 10, 'Literacy Through Fashion': 7, 'History': 8, 'ICT': 10, "It's Your Future": 3, 'Spanish': 3, 'Japanese': 5, 'French': 7, 'Music': 7 }, participation: "20/18" },
+  { name: "Maria", scores: { 'Irish': 6, 'Maths': [6,4], 'LIFT': 8, 'PE': [4,7,7], 'Active Flag': [7,7,8], 'Local & Global Citizenship': 7, 'Work Experience': [8,7,7], 'Drama': 10, 'Literacy Through Fashion': 9, 'History': 4, 'ICT': 5, "It's Your Future": 0, 'Spanish': 7, 'Japanese': 5, 'French': 6, 'Music': 9 }, participation: "20/22" },
+  { name: "Oluwaseun", scores: { 'Irish': 3, 'English': [0,0], 'Maths': [3,0], 'LIFT': 0, 'PE': [6,3,3], 'Active Flag': [5,2,2], 'Local & Global Citizenship': 3, 'Work Experience': [7,3,0], 'Drama': 0, 'Literacy Through Fashion': 0, "It's Your Future": 1, 'Spanish': 9, 'Japanese': 0, 'French': 1, 'Music': 0 }, participation: "14/8" },
+  { name: "Sophie", scores: { 'Irish': 7, 'Maths': [8,7], 'LIFT': 0, 'PE': [7,7,6], 'Active Flag': [8,7,8], 'Local & Global Citizenship': 7, 'Work Experience': [10,8,8], 'Drama': 10, 'Literacy Through Fashion': 10, 'History': 6, 'ICT': 10, "It's Your Future": 10, 'Spanish': 0, 'Japanese': 8, 'French': 8, 'Music': 9 }, participation: "22/20" },
+  { name: "Thomas", scores: { 'Irish': 8, 'Maths': [8,7], 'LIFT': 8, 'PE': [7,6,7], 'Active Flag': [8,7,8], 'Local & Global Citizenship': 7, 'Work Experience': [8,8,9], 'Drama': 10, 'Literacy Through Fashion': 9, 'History': 10, 'ICT': 10, "It's Your Future": 9, 'Spanish': 9, 'Japanese': 8, 'French': 8, 'Music': 9 }, participation: "22/24" },
+  { name: "Tracy", scores: { 'Irish': 0, 'LIFT': 5, 'Active Flag': [9,8], 'Local & Global Citizenship': 0, 'Drama': 0, "It's Your Future": 0, 'Spanish': 6, 'ICT': 5, 'French': 0 }, participation: "18/20" },
+  { name: "Jayden", scores: { 'Irish': 0, 'English': [0,0], 'Maths': 0, 'LIFT': 0, 'PE': [2,2], 'Active Flag': [2,0], 'Local & Global Citizenship': 0, 'Work Experience': [0,0], 'Drama': 0, 'Literacy Through Fashion': 0, "It's Your Future": null, 'Spanish': 2, 'Japanese': 0, 'French': 0 }, participation: "N/A" },
+];
+
+function avgScore(val) {
+  if (val === null || val === undefined) return null;
+  if (Array.isArray(val)) {
+    const nums = val.filter(v => v !== null && v !== undefined);
+    return nums.length ? nums.reduce((a,b) => a+b, 0) / nums.length : null;
+  }
+  return val;
+}
+
+function getBarColor(pct) {
+  if (pct >= 75) return '#1D9E75';
+  if (pct >= 50) return '#378ADD';
+  if (pct >= 25) return '#EF9F27';
+  return '#E24B4A';
+}
+
+function initials(name) {
+  return name.slice(0,2).toUpperCase();
+}
+
+function calcOverall(s) {
+  const entries = Object.entries(s.scores).map(([k,v]) => avgScore(v)).filter(v => v !== null);
+  if (!entries.length) return null;
+  return entries.reduce((a,b) => a+b, 0) / entries.length;
+}
+
+let currentIdx = 0;
+
+function render(idx) {
+  const s = students[idx];
+  const overall = calcOverall(s);
+  const subjects = Object.entries(s.scores)
+    .map(([name, val]) => ({ name, avg: avgScore(val), max: MAX_CREDITS[name] || 10 }))
+    .filter(e => e.avg !== null)
+    .sort((a,b) => (b.avg/b.max) - (a.avg/a.max));
+
+  const scored = subjects.filter(e => e.avg !== null);
+  const totalEarned = scored.reduce((a,e) => a + e.avg, 0);
+  const totalPossible = scored.reduce((a,e) => a + e.max, 0);
+
+  document.getElementById('reportArea').innerHTML = `
+    <div class="report-header">
+      <div class="avatar">${initials(s.name)}</div>
+      <div>
+        <div class="student-name">${s.name}</div>
+        <div class="student-class">TY 4M — Individual Credit Report</div>
+      </div>
+    </div>
+    <div class="summary-grid">
+      <div class="stat-card">
+        <div class="stat-label">Subjects recorded</div>
+        <div class="stat-value">${scored.length}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Credits earned</div>
+        <div class="stat-value">${totalEarned.toFixed(1)}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg score</div>
+        <div class="stat-value" style="color:${getBarColor(overall / 10 * 100)}">${overall !== null ? overall.toFixed(1) : '—'}<span style="font-size:13px;color:var(--color-text-secondary)">/10</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Participation</div>
+        <div class="stat-value" style="font-size:17px">${s.participation}</div>
+      </div>
+    </div>
+    <div class="subjects-section">
+      <div class="section-title">Subject breakdown</div>
+      ${subjects.length === 0 ? '<p class="no-data">No scores recorded.</p>' : subjects.map(e => {
+        const pct = Math.round((e.avg / e.max) * 100);
+        const col = getBarColor(pct);
+        return `<div class="subject-row">
+          <span class="subject-name">${e.name}</span>
+          <div class="bar-wrap"><div class="bar" style="width:${pct}%;background:${col}"></div></div>
+          <span class="score-label" style="color:${col}">${e.avg % 1 === 0 ? e.avg : e.avg.toFixed(1)}<span style="font-size:11px;color:var(--color-text-tertiary)">/${e.max}</span></span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+const sel = document.getElementById('studentSelect');
+students.forEach((s, i) => {
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = s.name;
+  sel.appendChild(opt);
+});
+
+sel.addEventListener('change', () => { currentIdx = +sel.value; render(currentIdx); });
+document.getElementById('prevBtn').addEventListener('click', () => {
+  currentIdx = (currentIdx - 1 + students.length) % students.length;
+  sel.value = currentIdx; render(currentIdx);
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  currentIdx = (currentIdx + 1) % students.length;
+  sel.value = currentIdx; render(currentIdx);
+});
+
+render(0);
+</script>
