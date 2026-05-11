@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Area – How To Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rect-col: #2563eb;
+    --rect-light: #dbeafe;
+    --rect-mid: #93c5fd;
+    --tri-col: #16a34a;
+    --tri-light: #dcfce7;
+    --tri-mid: #86efac;
+    --warn-col: #d97706;
+    --warn-light: #fef3c7;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0ea5e9 100%);
+    color: white;
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 0.4rem;
+  }
+  header p {
+    font-size: 1.1rem;
+    opacity: 0.85;
+    font-weight: 600;
+  }
+
+  /* NAV PILLS */
+  .nav-pills {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding: 1.5rem 2rem;
+    background: white;
+    border-bottom: 2px solid var(--border);
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-pill {
+    padding: 0.5rem 1.2rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+  }
+  .nav-pill.rect { background: var(--rect-light); color: var(--rect-col); border-color: var(--rect-mid); }
+  .nav-pill.tri  { background: var(--tri-light);  color: var(--tri-col);  border-color: var(--tri-mid); }
+  .nav-pill:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0 1.2rem;
+  }
+  .section-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .section-icon.rect { background: var(--rect-light); }
+  .section-icon.tri  { background: var(--tri-light); }
+  .section-title h2 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+  .section-title h2.rect { color: var(--rect-col); }
+  .section-title h2.tri  { color: var(--tri-col); }
+  .section-title p { color: var(--muted); font-size: 0.95rem; font-weight: 600; margin-top: 2px; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.2rem;
+    border: 2px solid var(--border);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* FORMULA BOX */
+  .formula-box {
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .formula-box.rect { background: var(--rect-light); border-left: 5px solid var(--rect-col); }
+  .formula-box.tri  { background: var(--tri-light);  border-left: 5px solid var(--tri-col); }
+  .formula-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .formula-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.15rem;
+    font-weight: 700;
+    flex: 1;
+  }
+  .formula-text.rect { color: var(--rect-col); }
+  .formula-text.tri  { color: var(--tri-col); }
+
+  /* SHAPE DIAGRAM */
+  .diagram-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+  }
+
+  /* STEPS */
+  .steps { list-style: none; }
+  .step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 0.9rem;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    color: white;
+  }
+  .step-num.rect { background: var(--rect-col); }
+  .step-num.tri  { background: var(--tri-col); }
+  .step-text { font-size: 0.97rem; font-weight: 600; line-height: 1.5; padding-top: 4px; }
+  .step-text em { font-style: normal; font-family: 'Space Mono', monospace; font-size: 0.9rem; }
+
+  /* WORKED EXAMPLE */
+  .example-box {
+    border-radius: 12px;
+    padding: 1.3rem;
+    margin-top: 0.5rem;
+  }
+  .example-box.rect { background: #eff6ff; border: 2px solid var(--rect-mid); }
+  .example-box.tri  { background: #f0fdf4; border: 2px solid var(--tri-mid); }
+  .example-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.7rem;
+  }
+  .example-title.rect { color: var(--rect-col); }
+  .example-title.tri  { color: var(--tri-col); }
+  .example-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin-bottom: 0.35rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .example-arrow { color: var(--muted); font-size: 0.85rem; }
+  .example-calc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  .example-calc.rect { color: var(--rect-col); }
+  .example-calc.tri  { color: var(--tri-col); }
+  .example-answer {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  /* WATCH OUT BOX */
+  .watchout {
+    background: var(--warn-light);
+    border: 2px solid #fcd34d;
+    border-left: 5px solid var(--warn-col);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-top: 0.8rem;
+  }
+  .watchout-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--warn-col);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+  .watchout ul { list-style: none; }
+  .watchout li {
+    font-size: 0.93rem;
+    font-weight: 600;
+    padding: 0.25rem 0;
+    display: flex;
+    gap: 0.5rem;
+    line-height: 1.5;
+  }
+  .watchout li::before { content: '⚠️'; flex-shrink: 0; }
+
+  /* MISSING SIDE SECTION */
+  .flip-box {
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-top: 0.8rem;
+  }
+  .flip-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 0.7rem;
+  }
+  .flip-formula {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 580px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* QUICK REF */
+  .quick-ref {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+    border-radius: 16px;
+    padding: 1.8rem;
+    margin: 2rem 0;
+  }
+  .quick-ref h3 { font-size: 1.1rem; font-weight: 900; margin-bottom: 1.2rem; opacity: 0.9; }
+  .qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .qr-item { background: rgba(255,255,255,0.08); border-radius: 10px; padding: 1rem; }
+  .qr-label { font-size: 0.75rem; font-weight: 700; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .qr-val { font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; }
+
+  /* DIVIDER */
+  .divider { height: 3px; background: linear-gradient(90deg, var(--rect-col), var(--tri-col)); border-radius: 999px; margin: 2.5rem 0; }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 0.4rem;
+  }
+  .tag.rect { background: var(--rect-light); color: var(--rect-col); }
+  .tag.tri  { background: var(--tri-light);  color: var(--tri-col); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📐 Area – How To Guide</h1>
+  <p>Rectangles &amp; Triangles · Junior Cycle Maths</p>
+</header>
+
+<nav class="nav-pills">
+  <a class="nav-pill rect" href="#rectangle">🟦 Rectangle</a>
+  <a class="nav-pill tri"  href="#triangle">🔺 Triangle</a>
+  <a class="nav-pill rect" href="#missing-rect">🟦 Missing Side (Rectangle)</a>
+  <a class="nav-pill tri"  href="#missing-tri">🔺 Missing Side (Triangle)</a>
+  <a class="nav-pill rect" href="#units">📏 Units Tip</a>
+</nav>
+
+<main>
+
+  <!-- ===== RECTANGLE ===== -->
+  <div id="rectangle" class="section-header">
+    <div class="section-icon rect">🟦</div>
+    <div class="section-title">
+      <h2 class="rect">Area of a Rectangle</h2>
+      <p>Questions 1 – 3 on your worksheet</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="formula-box rect">
+      <span class="formula-label">Formula</span>
+      <span class="formula-text rect">Area = Length × Width</span>
+    </div>
+
+    <div class="diagram-wrap">
+      <svg width="260" height="140" viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg">
+        <rect x="30" y="20" width="200" height="100" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <!-- length arrow -->
+        <line x1="30" y1="135" x2="230" y2="135" stroke="#2563eb" stroke-width="2"/>
+        <polygon points="30,132 30,138 22,135" fill="#2563eb"/>
+        <polygon points="230,132 230,138 238,135" fill="#2563eb"/>
+        <text x="130" y="133" text-anchor="middle" fill="#2563eb" font-family="Nunito" font-weight="800" font-size="12" dy="0">Length</text>
+        <!-- width arrow -->
+        <line x1="10" y1="20" x2="10" y2="120" stroke="#2563eb" stroke-width="2"/>
+        <polygon points="7,20 13,20 10,12" fill="#2563eb"/>
+        <polygon points="7,120 13,120 10,128" fill="#2563eb"/>
+        <text x="10" y="75" text-anchor="middle" fill="#2563eb" font-family="Nunito" font-weight="800" font-size="12" transform="rotate(-90,10,75)">Width</text>
+        <!-- A = L × W label -->
+        <text x="130" y="75" text-anchor="middle" fill="#1d4ed8" font-family="Space Mono" font-weight="700" font-size="14">A = L × W</text>
+      </svg>
+    </div>
+
+    <div class="card-title">📋 Step-by-Step</div>
+    <ul class="steps">
+      <li class="step">
+        <span class="step-num rect">1</span>
+        <span class="step-text">Write down the length and width. Make sure they are in the <strong>same units</strong> (both in cm, both in m, etc.).</span>
+      </li>
+      <li class="step">
+        <span class="step-num rect">2</span>
+        <span class="step-text">Multiply them together: <em>Area = Length × Width</em></span>
+      </li>
+      <li class="step">
+        <span class="step-num rect">3</span>
+        <span class="step-text">Write your answer with the correct squared unit, e.g. <em>30cm²</em></span>
+      </li>
+    </ul>
+
+    <div class="two-col" style="margin-top:1rem;">
+      <div class="example-box rect">
+        <div class="example-title rect">✅ Worked Example – Q1</div>
+        <div class="example-row">Length = 5cm, Width = 6cm</div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc rect">5 × 6 = 30</span></div>
+        <div class="example-answer">Answer: <span style="color:var(--rect-col)">30 cm²</span></div>
+      </div>
+      <div class="example-box rect">
+        <div class="example-title rect">✅ Worked Example – Q3</div>
+        <div class="example-row">35mm must become 3.5cm</div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc rect">3.5 × 3 = 10.5</span></div>
+        <div class="example-answer">Answer: <span style="color:var(--rect-col)">10.5 cm²</span></div>
+      </div>
+    </div>
+
+    <div class="watchout">
+      <div class="watchout-title">⚠️ Watch Out!</div>
+      <ul>
+        <li>If one side is in <strong>mm</strong> and the other in <strong>cm</strong>, convert first! (10mm = 1cm)</li>
+        <li>If one side is in <strong>m</strong> and the other in <strong>cm</strong>, convert first! (1m = 100cm)</li>
+        <li>Always include <strong>cm²</strong> (or m², etc.) in your answer — never forget the units!</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== MISSING SIDE – RECTANGLE ===== -->
+  <div id="missing-rect" class="section-header">
+    <div class="section-icon rect">🔍</div>
+    <div class="section-title">
+      <h2 class="rect">Missing Side of a Rectangle</h2>
+      <p>Questions 4 – 6 on your worksheet</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-weight:600; margin-bottom:1rem;">You already know the <strong>Area</strong> and one side. To find the missing side, <strong>divide</strong>.</p>
+
+    <div class="flip-box">
+      <div class="flip-title">Rearranging the Formula</div>
+      <div class="flip-formula" style="color:var(--rect-col)">Area = Length × Width</div>
+      <div class="flip-formula" style="color:#475569">→ Missing side = Area ÷ Known side</div>
+    </div>
+
+    <div class="card-title" style="margin-top:1rem;">📋 Step-by-Step</div>
+    <ul class="steps">
+      <li class="step">
+        <span class="step-num rect">1</span>
+        <span class="step-text">Check that all measurements are in the same units. Convert if needed.</span>
+      </li>
+      <li class="step">
+        <span class="step-num rect">2</span>
+        <span class="step-text">Divide the Area by the side you know: <em>Missing side = Area ÷ Known side</em></span>
+      </li>
+      <li class="step">
+        <span class="step-num rect">3</span>
+        <span class="step-text">Write the answer with the correct unit (cm, m, etc.) — not cm²!</span>
+      </li>
+    </ul>
+
+    <div class="two-col" style="margin-top:1rem;">
+      <div class="example-box rect">
+        <div class="example-title rect">✅ Worked Example – Q4</div>
+        <div class="example-row">Area = 28cm², Length = 4cm</div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc rect">28 ÷ 4 = 7</span></div>
+        <div class="example-answer">Width = <span style="color:var(--rect-col)">7 cm</span></div>
+      </div>
+      <div class="example-box rect">
+        <div class="example-title rect">✅ Worked Example – Q6</div>
+        <div class="example-row">Length = 0.092m → 9.2cm</div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc rect">32.2 ÷ 9.2 = 3.5</span></div>
+        <div class="example-answer">Width = <span style="color:var(--rect-col)">3.5 cm</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== TRIANGLE ===== -->
+  <div id="triangle" class="section-header">
+    <div class="section-icon tri">🔺</div>
+    <div class="section-title">
+      <h2 class="tri">Area of a Triangle</h2>
+      <p>Questions 1 – 3 on your worksheet</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="formula-box tri">
+      <span class="formula-label">Formula</span>
+      <span class="formula-text tri">Area = ½ × Base × Height</span>
+    </div>
+    <p style="font-weight:600; color:var(--muted); font-size:0.9rem; margin-bottom:1rem;">You can also write this as: Area = 0.5 × Base × Height &nbsp;(same thing!)</p>
+
+    <div class="diagram-wrap">
+      <svg width="260" height="150" viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- triangle -->
+        <polygon points="130,15 30,130 230,130" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+        <!-- height dashed line -->
+        <line x1="130" y1="15" x2="130" y2="130" stroke="#16a34a" stroke-width="1.8" stroke-dasharray="5,4"/>
+        <!-- height label -->
+        <text x="144" y="78" fill="#16a34a" font-family="Nunito" font-weight="800" font-size="12">Height</text>
+        <!-- right angle marker -->
+        <rect x="130" y="117" width="10" height="10" fill="none" stroke="#16a34a" stroke-width="1.5"/>
+        <!-- base arrow -->
+        <line x1="30" y1="143" x2="230" y2="143" stroke="#16a34a" stroke-width="2"/>
+        <polygon points="30,140 30,146 22,143" fill="#16a34a"/>
+        <polygon points="230,140 230,146 238,143" fill="#16a34a"/>
+        <text x="130" y="142" text-anchor="middle" fill="#16a34a" font-family="Nunito" font-weight="800" font-size="12" dy="0">Base</text>
+      </svg>
+    </div>
+
+    <div class="watchout" style="background:#f0fdf4; border-color:#86efac; border-left-color: var(--tri-col);">
+      <div class="watchout-title" style="color:var(--tri-col);">💡 What is the Vertical Height?</div>
+      <ul>
+        <li style="padding:0.25rem 0; display:flex; gap:0.5rem;">
+          <span>It is the <strong>straight-up height</strong> of the triangle — the perpendicular distance from the base to the top. It is <strong>not</strong> the slanted side!</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-title" style="margin-top:1.2rem;">📋 Step-by-Step</div>
+    <ul class="steps">
+      <li class="step">
+        <span class="step-num tri">1</span>
+        <span class="step-text">Make sure the base and height are in the <strong>same units</strong>. Convert if needed.</span>
+      </li>
+      <li class="step">
+        <span class="step-num tri">2</span>
+        <span class="step-text">Multiply: <em>0.5 × Base × Height</em></span>
+      </li>
+      <li class="step">
+        <span class="step-num tri">3</span>
+        <span class="step-text">Write your answer with <em>cm²</em> (or the correct squared unit).</span>
+      </li>
+    </ul>
+
+    <div class="two-col" style="margin-top:1rem;">
+      <div class="example-box tri">
+        <div class="example-title tri">✅ Worked Example – Q1</div>
+        <div class="example-row">Base = 3cm, Height = 7cm</div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc tri">0.5 × 3 × 7 = 10.5</span></div>
+        <div class="example-answer">Answer: <span style="color:var(--tri-col)">10.5 cm²</span></div>
+      </div>
+      <div class="example-box tri">
+        <div class="example-title tri">✅ Worked Example – Q3</div>
+        <div class="example-row">42mm = 4.2cm, Height = 5cm</div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc tri">0.5 × 4.2 × 5 = 10.5</span></div>
+        <div class="example-answer">Answer: <span style="color:var(--tri-col)">10.5 cm²</span></div>
+      </div>
+    </div>
+
+    <div class="watchout">
+      <div class="watchout-title">⚠️ Watch Out!</div>
+      <ul>
+        <li>The hypotenuse (the longest slanted side of a right-angled triangle) is <strong>NOT</strong> the height.</li>
+        <li>Remember to multiply by <strong>0.5</strong> (or ½) — students often forget this!</li>
+        <li>Convert mm → cm by dividing by 10 before you start.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== MISSING SIDE – TRIANGLE ===== -->
+  <div id="missing-tri" class="section-header">
+    <div class="section-icon tri">🔍</div>
+    <div class="section-title">
+      <h2 class="tri">Missing Side of a Triangle</h2>
+      <p>Questions 4 – 6 on your worksheet</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-weight:600; margin-bottom:1rem;">You know the <strong>Area</strong> and one side. Rearrange the formula to find the missing side.</p>
+
+    <div class="flip-box">
+      <div class="flip-title">Rearranging the Formula</div>
+      <div class="flip-formula" style="color:var(--tri-col)">Area = 0.5 × Base × Height</div>
+      <div class="flip-formula" style="color:#475569; margin-top:0.4rem;">→ Height = Area ÷ (0.5 × Base)</div>
+      <div class="flip-formula" style="color:#475569">→ Base &nbsp; = Area ÷ (0.5 × Height)</div>
+    </div>
+
+    <div class="card-title" style="margin-top:1rem;">📋 Step-by-Step</div>
+    <ul class="steps">
+      <li class="step">
+        <span class="step-num tri">1</span>
+        <span class="step-text">Convert everything to the same units first.</span>
+      </li>
+      <li class="step">
+        <span class="step-num tri">2</span>
+        <span class="step-text">Multiply the known side by 0.5: <em>0.5 × known side</em></span>
+      </li>
+      <li class="step">
+        <span class="step-num tri">3</span>
+        <span class="step-text">Divide the Area by your answer from Step 2.</span>
+      </li>
+    </ul>
+
+    <div class="two-col" style="margin-top:1rem;">
+      <div class="example-box tri">
+        <div class="example-title tri">✅ Worked Example – Q4</div>
+        <div class="example-row">Area = 30cm², Base = 6cm</div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc tri">0.5 × 6 = 3</span></div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc tri">30 ÷ 3 = 10</span></div>
+        <div class="example-answer">Height = <span style="color:var(--tri-col)">10 cm</span></div>
+      </div>
+      <div class="example-box tri">
+        <div class="example-title tri">✅ Worked Example – Q6</div>
+        <div class="example-row">0.055m → 5.5cm</div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc tri">0.5 × 5.5 = 2.75</span></div>
+        <div class="example-row"><span class="example-arrow">→</span><span class="example-calc tri">12.2 ÷ 2.75 ≈ 4.44</span></div>
+        <div class="example-answer">Height ≈ <span style="color:var(--tri-col)">4.44 cm</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- UNITS TIP -->
+  <div id="units" class="section-header">
+    <div class="section-icon" style="background:#fef3c7; font-size:1.5rem;">📏</div>
+    <div class="section-title">
+      <h2 style="color:var(--warn-col)">Units – The Golden Rule</h2>
+      <p>Always sort your units FIRST before calculating</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-bottom:1rem;">
+      <div style="background:#fef9c3; border:2px solid #fcd34d; border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.3rem;">📐</div>
+        <div style="font-family:'Space Mono',monospace; font-weight:700; font-size:0.95rem; color:var(--warn-col)">10mm = 1cm</div>
+      </div>
+      <div style="background:#fef9c3; border:2px solid #fcd34d; border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.3rem;">📐</div>
+        <div style="font-family:'Space Mono',monospace; font-weight:700; font-size:0.95rem; color:var(--warn-col)">100cm = 1m</div>
+      </div>
+      <div style="background:#fef9c3; border:2px solid #fcd34d; border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.3rem;">📐</div>
+        <div style="font-family:'Space Mono',monospace; font-weight:700; font-size:0.95rem; color:var(--warn-col)">1000m = 1km</div>
+      </div>
+    </div>
+    <p style="font-weight:600; color:var(--muted); font-size:0.95rem;">💡 Convert to the unit asked for in the question <strong>before</strong> you multiply. If the question says "give your answer in cm²", make sure both measurements are already in cm.</p>
+  </div>
+
+  <!-- QUICK REF -->
+  <div class="quick-ref">
+    <h3>⚡ Quick Reference – All Formulas</h3>
+    <div class="qr-grid">
+      <div class="qr-item">
+        <div class="qr-label">🟦 Rectangle Area</div>
+        <div class="qr-val">A = L × W</div>
+      </div>
+      <div class="qr-item">
+        <div class="qr-label">🟦 Missing Rectangle Side</div>
+        <div class="qr-val">Side = A ÷ other side</div>
+      </div>
+      <div class="qr-item">
+        <div class="qr-label">🔺 Triangle Area</div>
+        <div class="qr-val">A = 0.5 × b × h</div>
+      </div>
+      <div class="qr-item">
+        <div class="qr-label">🔺 Missing Triangle Side</div>
+        <div class="qr-val">Side = A ÷ (0.5 × other)</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>
